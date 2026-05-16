@@ -1,68 +1,160 @@
-"use client";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Image from "next/image";
-import { Quote, Leaf, Sun, Award, Play } from "lucide-react";
+import Link from "next/link";
+import { Quote, Leaf, Sun, Award, Star, Heart, Linkedin, Youtube, Calendar, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import AboutFAQ from "@/components/AboutFAQ";
+import OurStoryHero from "@/components/OurStoryHero";
+import RecentBlogs from "@/components/RecentBlogs";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Our Story | Heritage & Tradition | Sukrutham Farmstay",
+    description: "Discover the journey of Sukrutham Farmstay. From a dream visionary to a Diamond Class heritage home, learn about our commitment to traditional Kerala hospitality and eco-friendly architecture.",
+};
+
 
 export default function OurStory() {
     return (
-        <main className="min-h-screen bg-[#FDFCF8] selection:bg-primary/20 selection:text-primary-dark font-sans">
-            <Navbar variant="light" />
+        <main className="min-h-screen bg-[#FDFCF8] selection:bg-primary/20 selection:text-primary-dark font-sans relative overflow-x-hidden max-w-[100vw]">
+            <Navbar />
 
-            {/* --- Hero Section: Minimalist & Impactful --- */}
-            <section className="relative pt-40 pb-20 px-6 md:px-12 lg:px-20 border-b border-stone-100 overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-stone-100/50 via-transparent to-transparent -z-10"></div>
+            <OurStoryHero />
+            {/* --- Trust Signals & Awards --- */}
+            <section className="relative z-20 px-6 py-16 md:py-24 bg-stone-50">
+                <div className="container mx-auto max-w-6xl">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
 
-                <div className="container mx-auto max-w-5xl text-center">
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 text-primary text-xs font-bold tracking-widest uppercase mb-8 animate-in fade-in zoom-in duration-700">
-                        <Leaf className="w-3 h-3" /> Where Goodness Lives
-                    </div>
-
-                    <h1 className="text-6xl md:text-8xl font-display font-bold text-stone-900 mb-8 leading-[0.95] tracking-tight animate-in slide-in-from-bottom-8 duration-700 delay-100">
-                        The Heart of <br />
-                        <span className="italic text-stone-400 font-light">Sukrutham</span>
-                    </h1>
-
-                    <p className="text-xl md:text-2xl text-stone-600 font-light leading-relaxed max-w-3xl mx-auto animate-in slide-in-from-bottom-4 duration-700 delay-200">
-                        "Sukrutham" translates to the 'Goodness of Life'—a philosophy that guides every sunrise and sunset at our farm. A sanctuary where rural charm meets the warmth of home.
-                    </p>
-                </div>
-            </section>
-
-            {/* --- Trust Signal: Diamond Certificate --- */}
-            <section className="relative -mt-10 z-20 px-6">
-                <div className="container mx-auto max-w-4xl">
-                    <div className="bg-white rounded-2xl shadow-xl shadow-stone-200/50 border border-stone-100 p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 md:gap-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
-
-                        <div className="relative w-full md:w-1/3 shrink-0 group cursor-zoom-in">
-                            <div className="absolute inset-0 bg-gradient-to-tr from-amber-100 to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            <Image
-                                src="/certificate.jpg"
-                                alt="Diamond Grade Certificate"
-                                width={300}
-                                height={400}
-                                className="w-full h-auto rounded-lg border border-stone-100 shadow-sm relative z-10 transform group-hover:scale-[1.02] transition-transform duration-500"
-                            />
-                            <div className="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider text-stone-500 shadow-sm z-20">
-                                Verified
+                        {/* Diamond Certificate */}
+                        <div className="bg-white rounded-2xl shadow-xl shadow-stone-200/50 border border-stone-100 p-8 flex flex-col sm:flex-row items-center gap-8 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
+                            <div className="relative w-full sm:w-2/5 shrink-0 group cursor-zoom-in">
+                                <Image
+                                    src="/images/misc/certificate.jpg"
+                                    alt="Diamond Grade Certificate"
+                                    width={300}
+                                    height={400}
+                                    style={{ width: '100%', height: 'auto' }}
+                                    className="rounded-lg border border-stone-100 shadow-sm relative z-10 transform group-hover:scale-[1.02] transition-transform duration-500"
+                                />
+                                <div className="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider text-stone-500 shadow-sm z-20">
+                                    Verified
+                                </div>
+                            </div>
+                            <div className="text-center sm:text-left">
+                                <div className="flex items-center justify-center sm:justify-start gap-2 mb-3 text-amber-500">
+                                    <Award className="w-5 h-5 fill-current" />
+                                    <span className="font-bold tracking-wide text-xs uppercase">Govt. Certified</span>
+                                </div>
+                                <h2 className="text-2xl font-display font-bold text-stone-900 mb-3">
+                                    Diamond Class Homestay
+                                </h2>
+                                <p className="text-stone-600 leading-relaxed font-light text-sm mb-4">
+                                    Honored with the highest accolade from Kerala Tourism for meeting stringent standards of safety, hygiene, and authentic cultural hospitality.
+                                </p>
+                                <div className="inline-block px-3 py-1.5 bg-stone-50 rounded-lg text-[10px] font-medium text-stone-500 border border-stone-100">
+                                    Order No. DOT/15093/2023-ATIO1
+                                </div>
                             </div>
                         </div>
 
-                        <div className="text-center md:text-left">
-                            <div className="flex items-center justify-center md:justify-start gap-2 mb-4 text-amber-500">
-                                <Award className="w-6 h-6 fill-current" />
-                                <span className="font-bold tracking-wide text-sm uppercase">Government Certified</span>
+                        {/* Booking.com Award */}
+                        <div className="bg-white rounded-2xl shadow-xl shadow-stone-200/50 border border-stone-100 p-8 flex flex-col sm:flex-row items-center gap-8 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-400">
+                            <div className="relative w-2/3 sm:w-2/5 shrink-0 group mx-auto sm:mx-0">
+                                <Image
+                                    src="/booking-awards/Digital-Award_RA-2026.png"
+                                    alt="Booking.com Traveller Review Awards 2026"
+                                    width={300}
+                                    height={300}
+                                    style={{ width: '100%', height: 'auto' }}
+                                    className="object-contain drop-shadow-md transform group-hover:scale-[1.05] transition-transform duration-500"
+                                />
                             </div>
-                            <h2 className="text-3xl font-display font-bold text-stone-900 mb-4">
-                                Diamond Class Homestay
-                            </h2>
-                            <p className="text-stone-600 leading-relaxed font-light mb-6">
-                                We are honored to hold the prestigious <strong>Diamond Certification</strong> from Kerala Tourism. This is the highest accolade awarded only to homestays meeting the most stringent standards of safety, hygiene, and authentic cultural hospitality.
-                            </p>
-                            <div className="inline-block px-4 py-2 bg-stone-50 rounded-lg text-xs font-medium text-stone-500 border border-stone-100">
-                                Order No. DOT/15093/2023-ATIO1 (M)
+                            <div className="text-center sm:text-left">
+                                <div className="flex items-center justify-center sm:justify-start gap-2 mb-3 text-[#003B95]">
+                                    <span className="font-black text-3xl tracking-tight">9.8</span>
+                                    <span className="text-xs font-bold text-stone-400 uppercase tracking-widest mt-1">/ 10</span>
+                                </div>
+                                <h2 className="text-2xl font-display font-bold text-stone-900 mb-3">
+                                    Traveller Review Awards 2026
+                                </h2>
+                                <p className="text-stone-600 leading-relaxed font-light text-sm mb-4">
+                                    Recognized by Booking.com travelers for delivering exceptional hospitality and creating unforgettable, perfect experiences for our guests worldwide.
+                                </p>
+                                <div className="inline-block px-3 py-1.5 bg-[#003B95]/10 rounded-lg text-xs font-bold text-[#003B95]">
+                                    Booking.com
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            {/* --- The Meaning Behind Our Logo --- */}
+            <section className="py-16 md:py-24 px-6 md:px-12 bg-[#F9F8F6] border-y border-stone-100 relative">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl -z-0"></div>
+                <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -z-0"></div>
+
+                <div className="container mx-auto max-w-5xl relative z-10">
+                    <div className="flex flex-col lg:flex-row gap-16">
+                        {/* Logo Visual Side - Column stretches by default */}
+                        <div className="w-full lg:w-1/2">
+                            <div className="lg:sticky lg:top-32 z-20">
+                                <div className="relative group p-12 bg-white rounded-[3rem] shadow-xl shadow-stone-200/50 border border-stone-100 transition-transform duration-700 hover:scale-[1.02]">
+                                    <div className="relative w-64 h-48 md:w-80 md:h-60 mx-auto">
+                                        <Image
+                                            src="/logo/logo.png"
+                                            alt="Sukrutham Farmstay Logo"
+                                            fill
+                                            className="object-contain"
+                                        />
+                                    </div>
+                                    {/* Decorative elements around the logo box */}
+                                    <div className="absolute -top-4 -right-4 w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center animate-pulse">
+                                        <Leaf className="w-6 h-6 text-accent" />
+                                    </div>
+                                    <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center animate-pulse delay-700">
+                                        <Sun className="w-6 h-6 text-primary" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Text Explanation Side */}
+                        <div className="w-full lg:w-1/2 space-y-8 pt-8 lg:pt-0">
+                            <div>
+                                <span className="text-stone-400 font-bold tracking-widest uppercase text-xs mb-3 block">
+                                    Our Identity, Rooted in Nature
+                                </span>
+                                <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-stone-900 mb-6 leading-tight">
+                                    The Meaning Behind <br />
+                                    <span className="text-primary italic">Our Logo</span>
+                                </h2>
+                                <p className="text-lg text-stone-600 leading-relaxed font-light">
+                                    The <Link href="/" className="hover:text-primary transition-colors">Sukrutham Farmstay</Link> logo reflects the spirit of the land, tradition, and heritage that define our space.
+                                </p>
+                            </div>
+
+                            <div className="space-y-6 text-stone-600 font-light leading-relaxed">
+                                <p>
+                                    At the beginning of the logo, the <span className="text-primary font-bold">paddy motif</span> gently introduces the name “Sukrutham,” symbolizing the farmstay’s roots in agriculture, abundance, and a deep connection to nature. In Kerala’s culture, paddy fields represent life, nourishment, and the rhythm of rural living — values that are at the core of Sukrutham.
+                                </p>
+                                <p>
+                                    The <span className="font-display font-bold italic text-stone-800">classic serif typography</span> of the name evokes a sense of timelessness and heritage. It reflects traditional craftsmanship, ancient construction techniques, and the cultural depth that inspires both the design and philosophy of the farmstay.
+                                </p>
+                                <p>
+                                    The <span className="text-accent font-bold">golden tone</span> used in the logo represents prosperity, warmth, and the richness of the land. Complementing this, <span className="text-primary font-bold">green</span> is a key brand color, reflecting Kerala’s lush landscapes — fertile fields, coconut groves, and the serenity of nature.
+                                </p>
+                                <div className="pt-4 border-t border-stone-200">
+                                    <p className="text-xl font-display italic text-stone-800">
+                                        Together, these elements represent what Sukrutham stands for:
+                                    </p>
+                                    <p className="mt-4 text-primary font-bold text-lg leading-relaxed">
+                                        a place where nature, tradition, and peaceful living come together to create meaningful memories.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -70,7 +162,7 @@ export default function OurStory() {
             </section>
 
             {/* --- The Visionary (Refined Content) --- */}
-            <section className="py-32 px-6 md:px-12 lg:px-20 overflow-hidden">
+            <section className="py-16 md:py-32 px-6 md:px-12 lg:px-20 overflow-hidden">
                 <div className="container mx-auto">
                     <div className="flex flex-col lg:flex-row gap-20">
                         {/* Smaller Sticky Image */}
@@ -79,13 +171,14 @@ export default function OurStory() {
                                 <div className="space-y-6">
                                     <div className="relative aspect-[3/4] rounded-[2rem] overflow-hidden bg-stone-200 shadow-2xl rotate-2 hover:rotate-0 transition-all duration-700">
                                         <Image
-                                            src="/host-visionary-new.jpg"
-                                            alt="Mr. Murali"
+                                            src="/images/host/host-visionary-new.jpg"
+                                            alt="K.P. Murali"
                                             fill
-                                            className="object-cover"
+                                            sizes="(max-width: 768px) 100vw, 33vw"
+                                            className="object-cover object-top"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-8">
-                                            <h3 className="text-white text-3xl font-display font-bold">Mr. K.P. Murali</h3>
+                                            <h3 className="text-white text-3xl font-display font-bold">K.P. Murali</h3>
                                             <p className="text-white/80 font-light tracking-wide text-sm mt-1">Founding Visionary</p>
                                         </div>
                                     </div>
@@ -97,12 +190,12 @@ export default function OurStory() {
                         <div className="lg:w-7/12 pt-12 space-y-12">
                             <div>
                                 <span className="text-primary font-bold tracking-widest uppercase text-xs mb-3 block">The Beginning</span>
-                                <h2 className="text-4xl md:text-5xl font-display font-bold text-stone-900 mb-8">
+                                <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-stone-900 mb-8">
                                     A Dream Realized
                                 </h2>
                                 <div className="prose prose-lg text-stone-600 font-light leading-loose space-y-6">
                                     <p>
-                                        The story of Sukrutham began with a leap of faith. Our founder, <strong>Mr. K.P. Murali</strong>, left behind a high-paced career in a multinational corporation to return to his roots. A dream home conceptualised by the owner, who left his MNC job, to live in a place of calm and serenity - surrounded by nature's bountiful beauty - the call of Sukrutham grew stronger.
+                                        The story of Sukrutham began with a leap of faith. Our founder, <strong>K.P. Murali</strong>, left behind a high-paced career in a multinational corporation to return to his roots. A dream home conceptualised by the owner, who left his MNC job, to live in a place of calm and serenity - surrounded by nature's bountiful beauty - the call of Sukrutham grew stronger.
                                     </p>
                                     <p>
                                         Driven by a desire for calm and a deep love for nature’s bountiful beauty, he personally conceptualized and oversaw every detail of Sukrutham—from the foundation to the final traditional finish. He ensured with his personal presence that Sukrutham was built the way he aspired her to be.
@@ -121,6 +214,17 @@ export default function OurStory() {
                                 <p>
                                     A storyteller, a guide, and a host who treats every guest like family, Murali’s presence is the soul of the farmstay. The place where Sukrutham was born, is a place that attracted the owner, who set about constructing the house from foundation to finish.
                                 </p>
+                                <div className="pt-4">
+                                    <a
+                                        href="https://www.linkedin.com/in/kp-murali-6018318/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2.5 sm:py-3 bg-[#0a66c2]/10 text-[#0a66c2] hover:bg-[#0a66c2] hover:text-white font-medium rounded-full transition-all duration-300 w-fit group"
+                                    >
+                                        <Linkedin className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 group-hover:scale-110 transition-transform" />
+                                        <span className="text-[13px] sm:text-base whitespace-nowrap">Connect with K.P. Murali on LinkedIn</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -128,15 +232,15 @@ export default function OurStory() {
             </section>
 
             {/* --- Architecture (Bento Grid Layout) --- */}
-            <section className="relative py-32 bg-[#F9F8F6] text-stone-900 overflow-hidden border-t border-stone-100">
+            <section className="relative py-16 md:py-32 bg-[#F9F8F6] text-stone-900 overflow-hidden border-t border-stone-100">
                 <div className="container mx-auto px-6 md:px-12 relative z-10 max-w-6xl">
                     <div className="text-center mb-16 max-w-3xl mx-auto">
                         <span className="text-accent font-bold tracking-widest uppercase text-xs mb-4 block">Timeless Design</span>
-                        <h2 className="text-5xl md:text-7xl font-display font-bold mb-6 text-stone-900">
+                        <h2 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold mb-6 text-stone-900">
                             Architecture with a Soul
                         </h2>
                         <p className="text-xl text-stone-600 font-light leading-relaxed">
-                            Sukrutham is a masterpiece of traditional Kerala architecture. Built by using <span className="text-stone-800 font-medium">local materials and native architectural style</span> to build a traditional Kerala style home.
+                            <Link href="/" className="hover:text-primary transition-colors">Sukrutham Farmstay</Link> is a masterpiece of traditional Kerala architecture. Built by using <span className="text-stone-800 font-medium">local materials and native architectural style</span> to build a traditional Kerala style home, it has earned its reputation as a leading <Link href="/farm-stay-rooms" className="hover:text-primary transition-colors">farm house in Thrissur</Link>.
                         </p>
                     </div>
 
@@ -172,7 +276,7 @@ export default function OurStory() {
             </section>
 
             {/* --- Video Section 1: Cultural Essence --- */}
-            <section className="py-24 px-6 md:px-12 bg-white">
+            <section className="py-16 md:py-24 px-6 md:px-12 bg-white">
                 <div className="container mx-auto max-w-5xl">
                     <div className="aspect-video w-full relative rounded-3xl overflow-hidden shadow-2xl border-4 border-stone-100 mb-8 group">
                         <iframe
@@ -183,24 +287,38 @@ export default function OurStory() {
                             allowFullScreen
                         ></iframe>
                     </div>
-                    <p className="text-center text-xl font-display italic text-stone-600 max-w-3xl mx-auto">
+                    <p className="text-center text-xl font-display italic text-stone-600 max-w-3xl mx-auto mb-8">
                         "This video provides a glimpse into the cultural and traditional essence that Sukrutham Farmstay aims to preserve and share with its guests."
                     </p>
+                    <div className="flex flex-col items-center justify-center gap-4">
+                        <span className="text-xl font-display font-bold text-stone-900">
+                            Experience the Magic Before You Arrive
+                        </span>
+                        <a
+                            href="https://www.youtube.com/@SukruthamFarmStay"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-3 px-5 sm:px-8 py-3 sm:py-4 text-[13px] sm:text-base whitespace-nowrap bg-[#FF0000] hover:bg-red-700 text-white font-bold rounded-full transition-all duration-300 hover:scale-105 shadow-lg shadow-red-600/30 group"
+                        >
+                            <Youtube className="w-6 h-6 group-hover:animate-pulse" />
+                            <span>Subscribe to our YouTube Channel</span>
+                        </a>
+                    </div>
                 </div>
             </section>
 
             {/* --- Living Farm (Redesigned Layout) --- */}
-            <section className="py-32 px-6 md:px-12 bg-[#F4F1EA]">
+            <section className="py-16 md:py-32 px-6 md:px-12 bg-[#F4F1EA]">
                 <div className="container mx-auto">
                     <div className="text-center mb-20 max-w-3xl mx-auto">
                         <span className="text-primary font-bold tracking-widest uppercase text-xs mb-3 block">Biodiversity</span>
-                        <h2 className="text-4xl md:text-5xl font-display font-bold text-stone-900 mb-6">A Living, Breathing Farm</h2>
+                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-stone-900 mb-6">A Living, Breathing Farm</h2>
                         <p className="text-lg text-stone-600 font-light leading-relaxed">
-                            Set within a lush one-acre organic farm, life here moves at a gentle pace. Our gardens are a treasure trove of biodiversity, featuring:
+                            Set within a lush one-acre organic farm, life here moves at a gentle pace, offering the quintessential charm of a <Link href="/homestay-in-thrissur" className="hover:text-primary transition-colors">homestay in Thrissur Kerala</Link>. Our gardens are a treasure trove of biodiversity, featuring:
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-8">
+                    <div className="grid md:grid-cols-3 gap-8 items-start">
                         {/* Orchard Card */}
                         <div className="group bg-white rounded-[2rem] p-8 border border-stone-100 hover:shadow-xl hover:shadow-stone-200/50 transition-all duration-500 hover:-translate-y-2">
                             <div className="w-16 h-16 bg-orange-100/50 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500">
@@ -238,10 +356,10 @@ export default function OurStory() {
             </section>
 
             {/* --- Video Section 2: In & Around (Cinematic Layout) --- */}
-            <section className="py-32 bg-stone-50 text-stone-900 border-t border-stone-200 overflow-hidden">
+            <section className="py-16 md:py-32 bg-stone-50 text-stone-900 border-t border-stone-200 overflow-hidden">
                 <div className="container mx-auto px-6 md:px-12 max-w-7xl">
                     <div className="text-center mb-16">
-                        <h2 className="text-5xl md:text-7xl font-display font-bold text-stone-900 mb-8">
+                        <h2 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold text-stone-900 mb-8">
                             Experience the <br /> Unseen Kerala
                         </h2>
                         <p className="text-xl text-stone-600 font-light leading-relaxed max-w-3xl mx-auto">
@@ -271,11 +389,42 @@ export default function OurStory() {
             </section>
 
             {/* Footer Note */}
-            <div className="py-24 bg-[#FDFCF8] text-center px-6">
+            <div className="py-16 md:py-24 bg-[#FDFCF8] text-center px-6">
                 <p className="text-2xl md:text-3xl font-display italic text-stone-500 max-w-4xl mx-auto leading-relaxed">
                     "Sukrutham will weave its magic around you. She will make you fall in love with yourself and the place."
                 </p>
             </div>
+
+            <AboutFAQ />
+
+            <RecentBlogs />
+
+            {/* --- Final CTA Section --- */}
+            <section className="relative py-16 md:py-32 bg-stone-900 text-center overflow-hidden">
+                <div className="absolute inset-0 z-0">
+                    <Image
+                        src="/hero-carousel/slide3.jpg"
+                        alt="Sukrutham Farm"
+                        fill
+                        className="object-cover opacity-20"
+                    />
+                    <div className="absolute inset-0 bg-stone-900/80"></div>
+                </div>
+                <div className="container mx-auto px-6 relative z-10 max-w-3xl">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-white mb-6">
+                        EXPLORE SUKRUTHAM FARMSTAY - HARVEST HAPPY MEMORIES!
+                    </h2>
+                    <p className="text-xl text-stone-300 font-light mb-10">
+                        Come and experience the goodness of life. Let the farm weave its magic around you, and take home memories that last a lifetime.
+                    </p>
+                    <Link
+                        href="/book"
+                        className="inline-block px-10 py-5 bg-primary text-white hover:bg-white hover:text-stone-900 rounded-full font-bold tracking-widest uppercase transition-all duration-300 shadow-xl hover:-translate-y-1 hover:shadow-2xl"
+                    >
+                        Plan Your Escape
+                    </Link>
+                </div>
+            </section>
 
             <Footer />
         </main>

@@ -3,9 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, Clock, Navigation, Map, Info, Car, Sun, CheckCircle2, Route } from "lucide-react";
+import { MapPin, Clock, Navigation, Info, Car, Sun, CheckCircle2, ChevronRight, Map as MapIcon } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { cn } from "@/lib/utils";
 
 // We use an extended data structure to handle the overview vs detailed view
 const allPlaces = [
@@ -278,24 +279,24 @@ export default function PlacesToExplorePage() {
     }, []);
 
     // Filter places based on radius
-    const getPlacesForRadius = (limit: number) => {
-        const currentIndex = timelineData.findIndex(t => t.limit === limit);
-        const prevLimit = currentIndex > 0 ? timelineData[currentIndex - 1].limit : 0;
-        return allPlaces.filter(p => p.distValue > prevLimit && p.distValue <= limit);
+    const getPlacesForRadius = (limit: number | 'All') => {
+        if (limit === 'All') return allPlaces;
+        return allPlaces.filter(p => p.distValue <= limit);
     };
 
-    const activePlacesCount = hoveredRadius !== null ? getPlacesForRadius(hoveredRadius).length : 0;
-    const spacerHeight = hoveredRadius === null ? 0 : (activePlacesCount === 0 ? 120 : 100 + activePlacesCount * 65);
+    // State for the active distance filter, default to 'All'
+    const [activeDistance, setActiveDistance] = useState<number | 'All'>('All');
+    const displayedPlaces = getPlacesForRadius(activeDistance);
 
 
     return (
         <main className="min-h-screen bg-[#FDFCF8] font-sans selection:bg-primary/20">
             <Navbar variant="light" />
 
-            {/* Hero Section */}
+            {/* ELEGANT SPLIT HERO SECTION */}
             <section
                 ref={heroRef}
-                className="relative pt-32 pb-16 md:pt-40 md:pb-20 overflow-hidden group"
+                className="relative min-h-[90vh] flex items-center pt-28 pb-16 md:pt-32 md:pb-24 overflow-hidden group bg-[#FDFCF8]"
             >
                 {/* Interactive Mouse Hover Glow */}
                 <div
@@ -306,215 +307,191 @@ export default function PlacesToExplorePage() {
                 />
 
                 {/* Animated Ambient Orbs */}
-                <div className="absolute top-[10%] right-[10%] w-[300px] h-[300px] bg-emerald-100/50 rounded-full blur-[80px] animate-pulse pointer-events-none mix-blend-multiply flex-shrink-0" />
-                <div className="absolute -bottom-[20%] left-[5%] w-[400px] h-[400px] bg-amber-50/60 rounded-full blur-[100px] animate-pulse pointer-events-none mix-blend-multiply flex-shrink-0" style={{ animationDelay: '1.5s', animationDuration: '4s' }} />
-                <div className="absolute top-[40%] left-[30%] w-[250px] h-[250px] bg-blue-50/40 rounded-full blur-[90px] animate-pulse pointer-events-none mix-blend-multiply flex-shrink-0" style={{ animationDelay: '3s', animationDuration: '6s' }} />
+                <div className="absolute top-[10%] left-[60%] w-[40%] h-[40%] bg-[#EBE5DC]/40 rounded-full blur-3xl animate-pulse pointer-events-none mix-blend-multiply flex-shrink-0" />
+                <div className="absolute -bottom-[10%] right-[40%] w-[50%] h-[50%] bg-[#FAF8F5] rounded-full blur-3xl animate-pulse pointer-events-none mix-blend-multiply flex-shrink-0" style={{ animationDelay: '1.5s', animationDuration: '4s' }} />
 
-                <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-7xl relative z-10">
-                    <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-                        {/* Text Content */}
-                        <div className="lg:w-[40%] text-center lg:text-left shrink-0">
-                            <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 drop-shadow-sm flex items-center justify-center lg:justify-start gap-2">
-                                <Navigation className="w-5 h-5" /> Discover Thrissur
-                            </span>
-                            <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold text-stone-900 mb-6 leading-[1.1] tracking-tight">
-                                Places to <span className="italic text-accent">Explore</span>
+                <div className="container mx-auto px-6 md:px-12 lg:px-20 relative z-10">
+                    <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+                        {/* Left Content Area */}
+                        <div className="w-full lg:w-[45%] flex flex-col justify-center text-center lg:text-left pt-12 lg:pt-0 shrink-0">
+                            <div className="flex items-center justify-center lg:justify-start gap-4 mb-8">
+                                <div className="h-[1px] w-12 bg-[#758A6D]"></div>
+                                <span className="text-[#758A6D] font-bold tracking-[0.15em] uppercase text-sm flex items-center gap-2">
+                                    <Navigation className="w-4 h-4" /> Discover Thrissur
+                                </span>
+                            </div>
+                            <h1 className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-display font-medium text-[#2C302A] leading-[1.1] mb-8">
+                                Places to <br />
+                                <span className="italic text-[#A48869] font-serif">Explore</span>
                             </h1>
-                            <p className="text-lg md:text-xl text-stone-600 leading-relaxed font-light mb-0 max-w-xl mx-auto lg:mx-0">
-                                While staying at Sukrutham is a wholesome experience in itself, here are some spectacular options to explore near the farmstay.
+                            <p className="text-lg text-stone-600 leading-relaxed max-w-xl mx-auto lg:mx-0 mb-10">
+                                While staying at Sukrutham, the <Link href="/homestay-in-thrissur" className="text-primary hover:text-primary-dark underline decoration-primary/30 underline-offset-2 hover:decoration-primary transition-colors font-medium">best homestay in Thrissur</Link>, is a wholesome experience in itself, here are some spectacular options to explore nearby.
                             </p>
-                            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                                <Link href="/book" className="inline-flex items-center justify-center px-8 py-4 bg-primary text-white rounded-full font-bold tracking-wide hover:bg-primary/90 transition-all hover:scale-105 shadow-lg shadow-primary/20">
-                                    Plan Your Local Exploration
+                            <div className="flex justify-center lg:justify-start">
+                                <Link href="/book" className="inline-flex items-center justify-center gap-2 bg-[#758A6D] hover:bg-[#5C6D55] text-white px-5 sm:px-8 py-3 sm:py-4 text-[13px] sm:text-base whitespace-nowrap rounded-full font-bold transition-all hover:shadow-lg active:scale-95 text-sm tracking-wider uppercase">
+                                    Plan Local Exploration
                                 </Link>
                             </div>
                         </div>
-                        {/* Hero Map Image */}
-                        <div className="lg:w-[60%] w-full animate-in slide-in-from-right-8 duration-700 fade-in zoom-in-95 flex justify-center lg:justify-end lg:-mr-8 xl:-mr-16">
+
+                        {/* Right Image Area */}
+                        <div className="w-full lg:w-[55%] animate-in slide-in-from-right-8 duration-700 fade-in zoom-in-95 flex justify-center mt-12 lg:mt-0 relative">
                             <Image
-                                src="/location-hub-map.png"
+                                src="/images/misc/location-hub-map.png"
                                 alt="Sukrutham Farmstay Location Map"
                                 width={1400}
                                 height={1050}
+                                sizes="(max-width: 768px) 100vw, 55vw"
                                 priority
-                                className="w-full max-w-4xl h-auto rounded-3xl border-[8px] border-white shadow-2xl shadow-stone-900/10 object-cover -rotate-2 hover:rotate-0 transition-all duration-700"
+                                className="w-full h-auto rounded-[2.5rem] lg:rounded-[3rem] border-[8px] border-white shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] object-cover -rotate-2 hover:rotate-0 transition-all duration-700"
                             />
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Interactive Timeline Map */}
-            <section className="py-12 bg-transparent relative z-20">
-                <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-6xl">
-                    <h2 className="text-center font-display text-2xl mb-12 text-stone-800">Explore by Distance from <span className="font-semibold text-primary">Sukrutham Farmstay</span></h2>
-
-                    {/* The Timeline Line */}
-                    <div
-                        className="relative max-w-4xl mx-auto w-full flex items-center justify-between pb-12 pt-8"
-                        onMouseLeave={() => setHoveredRadius(null)}
-                    >
-                        {/* Connecting Line */}
-                        <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-1 bg-stone-200 rounded-full z-0"></div>
-                        <div className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-primary rounded-full z-0 transition-all duration-500"
-                            style={{
-                                width: hoveredRadius === null ? '0%' :
-                                    `${(timelineData.findIndex(t => t.limit === hoveredRadius) / (timelineData.length - 1)) * 100}%`
-                            }}>
-                        </div>
-
-                        {/* Timeline Nodes */}
-                        {timelineData.map((node) => {
-                            const active = hoveredRadius !== null && node.limit <= hoveredRadius;
-                            const isHovered = hoveredRadius === node.limit;
-                            const placesInNode = getPlacesForRadius(node.limit);
-
-                            return (
-                                <div
-                                    key={node.limit}
-                                    className="relative z-10 flex flex-col items-center group cursor-pointer"
-                                    onMouseEnter={(e) => {
-                                        setHoveredRadius(node.limit);
-                                        const rect = e.currentTarget.getBoundingClientRect();
-                                        setPopoverDirection(rect.top > window.innerHeight / 2 ? 'top' : 'bottom');
-                                    }}
-                                    onClick={(e) => {
-                                        setHoveredRadius(node.limit);
-                                        const rect = e.currentTarget.getBoundingClientRect();
-                                        setPopoverDirection(rect.top > window.innerHeight / 2 ? 'top' : 'bottom');
-                                    }}
-                                >
-                                    {/* The Node Dot */}
-                                    <div className={`w-6 h-6 md:w-8 md:h-8 rounded-full border-4 shadow-md transition-all duration-300 ${active ? 'bg-primary border-white scale-125' : 'bg-white border-stone-300 group-hover:border-primary'}`}></div>
-
-                                    {/* The Label */}
-                                    <span className={`absolute top-10 whitespace-nowrap text-sm md:text-base font-semibold transition-colors ${active ? 'text-primary' : 'text-stone-500'}`}>
-                                        {node.label}
-                                    </span>
-
-                                    {/* Hover Popover List of Places */}
-                                    {isHovered && placesInNode.length > 0 && (
-                                        <div className={`absolute ${popoverDirection === 'bottom' ? 'top-14' : 'bottom-14'} bg-white rounded-2xl shadow-2xl p-4 w-64 md:w-80 border border-stone-100 animate-in fade-in zoom-in-95 duration-200 pointer-events-none z-50`}>
-                                            <div className="text-xs font-bold uppercase tracking-wider text-primary mb-3 pb-2 border-b border-stone-100">
-                                                In this radius
-                                            </div>
-                                            <div className="space-y-3">
-                                                {placesInNode.map(p => (
-                                                    <div key={p.id} className="flex flex-col">
-                                                        <span className="font-semibold text-stone-800 text-sm leading-tight">{p.title}</span>
-                                                        <div className="flex items-center gap-2 mt-1">
-                                                            <span className="text-xs text-stone-500 flex items-center gap-1"><MapPin className="w-3 h-3 text-accent" /> {p.distance}</span>
-                                                            <span className="text-xs text-stone-500 flex items-center gap-1"><Clock className="w-3 h-3" /> {p.time}</span>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                            {/* Decorative triangle arrow pointing towards the line */}
-                                            {popoverDirection === 'bottom' ? (
-                                                <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white rotate-45 border-l border-t border-stone-100"></div>
-                                            ) : (
-                                                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white rotate-45 border-r border-b border-stone-100"></div>
-                                            )}
-                                        </div>
-                                    )}
-
-                                    {/* Hover Popover if Empty */}
-                                    {isHovered && placesInNode.length === 0 && (
-                                        <div className={`absolute ${popoverDirection === 'bottom' ? 'top-14' : 'bottom-14'} bg-white rounded-xl shadow-2xl p-4 w-48 border border-stone-100 animate-in fade-in zoom-in-95 duration-200 pointer-events-none z-50`}>
-                                            <div className="text-xs text-center text-stone-500 italic">No major spots in this exact interval.</div>
-                                            {/* Decorative triangle arrow pointing towards the line */}
-                                            {popoverDirection === 'bottom' ? (
-                                                <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white rotate-45 border-l border-t border-stone-100"></div>
-                                            ) : (
-                                                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white rotate-45 border-r border-b border-stone-100"></div>
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
-
-                    {/* Dynamic Spacer to push the next section down when a tooltip opens */}
-                    <div
-                        className="w-full transition-all duration-500 ease-in-out"
-                        style={{ height: `${spacerHeight}px` }}
-                        aria-hidden="true"
-                    />
-                </div>
-            </section>
-
-            {/* Main Content Area (Bento Grid) */}
+            {/* Main Content Area (Detailed Directory with Filters) */}
             <section id="directory" className="py-16 md:py-24" onMouseLeave={() => setHoveredRadius(null)}>
                 <div className="container mx-auto px-6 md:px-12 lg:px-20 max-w-7xl">
-                    <div className="mb-12 text-center">
-                        <h2 className="text-3xl font-display font-bold text-stone-900 mb-3">Detailed Directory</h2>
-                        <p className="text-stone-500 max-w-2xl mx-auto">Click on the timeline above to filter, or browse all our spectacular day-trip destinations below.</p>
+                    <div className="mb-4 text-center">
+                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-stone-900 mb-6 drop-shadow-sm">Detailed Directory</h2>
+                        <p className="text-stone-600 text-lg max-w-3xl mx-auto leading-relaxed">
+                            Discover the hidden gems and iconic landmarks dotted around <Link href="/" className="text-primary hover:text-primary-dark underline decoration-primary/30 underline-offset-2 hover:decoration-primary transition-colors font-medium">Sukrutham Farmstay</Link>, perfectly categorized by how far you want to travel today.
+                        </p>
+                    </div>
+
+                    {/* Filter Tabs - Guaranteed Fix for Shadow Clipping */}
+                    <div className="mb-8">
+                        <div className="pt-4 pb-14">
+                            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
+
+                                <button
+                                    onClick={() => setActiveDistance('All')}
+                                    className={cn(
+                                        "px-3.5 sm:px-6 py-3 sm:py-3.5 rounded-full font-semibold transition-all duration-500 flex items-center gap-2 sm:gap-3 border shadow-sm",
+                                        activeDistance === 'All'
+                                            ? "bg-primary text-white border-primary shadow-[0_20px_40px_-10px_rgba(117,138,109,0.5)] scale-110 z-10"
+                                            : "bg-white text-stone-600 border-stone-200 hover:border-primary/50 hover:bg-stone-50 hover:shadow-md"
+                                    )}
+                                >
+                                    <span className="whitespace-nowrap tracking-wide uppercase text-[10px] sm:text-[13px]">
+                                        <span className="hidden sm:inline">All Places</span>
+                                        <span className="sm:hidden">All</span>
+                                    </span>
+                                    <span className={cn(
+                                        "min-w-5 h-5 sm:min-w-6 sm:h-6 rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-bold",
+                                        activeDistance === 'All' ? "bg-white/20 text-white" : "bg-stone-100 text-stone-500"
+                                    )}>
+                                        {allPlaces.length}
+                                    </span>
+                                </button>
+                                {timelineData.map((node) => {
+                                    const isActive = activeDistance === node.limit;
+                                    const count = getPlacesForRadius(node.limit).length;
+
+                                    return (
+                                        <button
+                                            key={node.limit}
+                                            onClick={() => setActiveDistance(node.limit)}
+                                            className={cn(
+                                                "px-3.5 sm:px-6 py-3 sm:py-3.5 rounded-full font-semibold transition-all duration-500 flex items-center gap-2 sm:gap-3 border shadow-sm",
+                                                isActive
+                                                    ? "bg-primary text-white border-primary shadow-[0_20px_40px_-10px_rgba(117,138,109,0.5)] scale-110 z-10"
+                                                    : "bg-white text-stone-600 border-stone-200 hover:border-primary/50 hover:bg-stone-50 hover:shadow-md"
+                                            )}
+                                        >
+                                            <span className="whitespace-nowrap tracking-wide uppercase text-[10px] sm:text-[13px]">
+                                                <span className="hidden sm:inline">Within </span>
+                                                {node.label.replace('Within ', '')}
+                                            </span>
+                                            {count > 0 && (
+                                                <span className={cn(
+                                                    "min-w-5 h-5 sm:min-w-6 sm:h-6 rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-bold",
+                                                    isActive ? "bg-white/20 text-white" : "bg-stone-100 text-stone-500"
+                                                )}>
+                                                    {count}
+                                                </span>
+                                            )}
+                                        </button>
+                                    );
+                                })}
+
+                            </div>
+                        </div>
                     </div>
 
                     {/* Bento Grid Layout */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                        {allPlaces.map((place) => (
-                            <div
-                                id={place.id}
-                                key={place.id}
-                                className={`scroll-mt-32 flex flex-col bg-white rounded-3xl overflow-hidden border border-stone-200/60 transition-all duration-500 hover:-translate-y-1 hover:shadow-xl hover:border-stone-300 ${hoveredRadius && place.distValue > hoveredRadius ? 'opacity-30 grayscale' : 'opacity-100'}`}
-                            >
-                                {/* Top Thumbnail */}
-                                <div className="w-full aspect-[4/3] relative overflow-hidden bg-stone-100">
-                                    <Image
-                                        src={place.image}
-                                        alt={place.title}
-                                        fill
-                                        className="object-cover transition-transform duration-700 hover:scale-105"
-                                    />
-                                    {/* Overlay Badge */}
-                                    <div className="absolute top-4 left-4 flex gap-2">
-                                        <span className="bg-white/90 backdrop-blur-sm text-stone-800 text-[10px] font-bold px-2.5 py-1.5 rounded-full uppercase tracking-widest shadow-sm">
-                                            {place.area}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                {/* Bottom Info Packing */}
-                                <div className="p-6 md:p-8 flex flex-col flex-grow">
-                                    <div className="flex items-center gap-3 mb-4 text-xs font-semibold text-stone-600">
-                                        <span className="flex items-center gap-1.5 bg-stone-100 px-2.5 py-1 rounded-md">
-                                            <MapPin className="w-3.5 h-3.5 text-accent" /> {place.distance}
-                                        </span>
-                                        <span className="flex items-center gap-1.5 bg-emerald-50 text-emerald-800 px-2.5 py-1 rounded-md">
-                                            <Clock className="w-3.5 h-3.5" /> {place.time}
-                                        </span>
+                        {displayedPlaces.length > 0 ? (
+                            displayedPlaces.map((place) => (
+                                <div
+                                    id={place.id}
+                                    key={place.id}
+                                    className={`scroll-mt-32 flex flex-col bg-white rounded-3xl overflow-hidden border border-stone-200/60 transition-all duration-500 hover:-translate-y-1 hover:shadow-xl hover:border-stone-300 ${hoveredRadius && place.distValue > hoveredRadius ? 'opacity-30 grayscale' : 'opacity-100'}`}
+                                >
+                                    {/* Top Thumbnail */}
+                                    <div className="w-full aspect-[4/3] relative overflow-hidden bg-stone-100">
+                                        <Image
+                                            src={place.image}
+                                            alt={place.title}
+                                            fill
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                            className="object-cover transition-transform duration-700 hover:scale-105"
+                                        />
+                                        {/* Overlay Badge */}
+                                        <div className="absolute top-4 left-4 flex gap-2">
+                                            <span className="bg-white/90 backdrop-blur-sm text-stone-800 text-[10px] font-bold px-2.5 py-1.5 rounded-full uppercase tracking-widest shadow-sm">
+                                                {place.area}
+                                            </span>
+                                        </div>
                                     </div>
 
-                                    <h3 className="text-xl font-display font-bold text-stone-900 mb-3 leading-tight line-clamp-2">
-                                        {place.title}
-                                    </h3>
+                                    {/* Bottom Info Packing */}
+                                    <div className="p-6 md:p-8 flex flex-col flex-grow">
+                                        <div className="flex items-center gap-3 mb-4 text-xs font-semibold text-stone-600">
+                                            <span className="flex items-center gap-1.5 bg-stone-100 px-2.5 py-1 rounded-md">
+                                                <MapPin className="w-3.5 h-3.5 text-accent" /> {place.distance}
+                                            </span>
+                                            <span className="flex items-center gap-1.5 bg-emerald-50 text-emerald-800 px-2.5 py-1 rounded-md">
+                                                <Clock className="w-3.5 h-3.5" /> {place.time}
+                                            </span>
+                                        </div>
 
-                                    <p className="text-stone-600 text-sm leading-relaxed font-light mb-6 flex-grow line-clamp-3">
-                                        {place.description}
-                                    </p>
+                                        <h3 className="text-xl font-display font-bold text-stone-900 mb-3 leading-tight line-clamp-2">
+                                            {place.title}
+                                        </h3>
 
-                                    {/* Details Accordion using Details/Summary for native expanding without state */}
-                                    <details className="mt-auto group border-t border-stone-100 pt-4 cursor-pointer">
-                                        <summary className="list-none flex items-center justify-between text-sm font-semibold text-primary select-none w-full">
-                                            <span>View Highlights</span>
-                                            <div className="w-6 h-6 rounded-full bg-emerald-50 flex items-center justify-center transition-transform duration-300 group-open:rotate-180">
-                                                <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                                            </div>
-                                        </summary>
-                                        <ul className="space-y-2 mt-4 animate-in slide-in-from-top-2 fade-in duration-300">
-                                            {place.highlights.map((highlight, idx) => (
-                                                <li key={idx} className="flex gap-2 items-start text-xs text-stone-600">
-                                                    <CheckCircle2 className="w-3.5 h-3.5 text-accent shrink-0 mt-0.5" />
-                                                    <span className="leading-relaxed">{highlight}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </details>
+                                        <p className="text-stone-600 text-sm leading-relaxed font-light mb-6 flex-grow line-clamp-3">
+                                            {place.description}
+                                        </p>
+
+                                        {/* Details Accordion using Details/Summary for native expanding without state */}
+                                        <details className="mt-auto group border-t border-stone-100 pt-4 cursor-pointer">
+                                            <summary className="list-none flex items-center justify-between text-sm font-semibold text-primary select-none w-full">
+                                                <span>View Highlights</span>
+                                                <div className="w-6 h-6 rounded-full bg-emerald-50 flex items-center justify-center transition-transform duration-300 group-open:rotate-180">
+                                                    <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                                </div>
+                                            </summary>
+                                            <ul className="space-y-2 mt-4 animate-in slide-in-from-top-2 fade-in duration-300">
+                                                {place.highlights.map((highlight, idx) => (
+                                                    <li key={idx} className="flex gap-2 items-start text-xs text-stone-600">
+                                                        <CheckCircle2 className="w-3.5 h-3.5 text-accent shrink-0 mt-0.5" />
+                                                        <span className="leading-relaxed">{highlight}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </details>
+                                    </div>
                                 </div>
+                            ))
+                        ) : (
+                            <div className="col-span-full flex flex-col items-center justify-center py-20 px-6 text-center bg-white rounded-3xl border border-stone-100 shadow-sm">
+                                <MapIcon className="w-16 h-16 text-stone-200 mb-6" />
+                                <h3 className="text-2xl font-display font-bold text-stone-800 mb-3">No destinations found</h3>
+                                <p className="text-stone-500 max-w-md">There are no spots within this exact distance range. Try selecting another distance on the timeline above!</p>
                             </div>
-                        ))}
+                        )}
 
                         {/* Local Sightseeing Blog Link Card to fill the empty grid space (15th item) */}
                         <div className="flex flex-col bg-stone-900 rounded-3xl overflow-hidden border border-stone-800 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl group relative items-center justify-center p-8 text-center min-h-[400px]">
@@ -574,7 +551,7 @@ export default function PlacesToExplorePage() {
                         <span className="text-primary font-bold tracking-widest uppercase text-sm mb-4 drop-shadow-sm flex items-center justify-center gap-2">
                             <Info className="w-4 h-4" /> Good to Know
                         </span>
-                        <h2 className="text-3xl md:text-4xl font-display font-bold text-stone-900">Frequently Asked Questions</h2>
+                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-stone-900">Frequently Asked Questions</h2>
                     </div>
                     <div className="space-y-4">
                         {[
@@ -630,13 +607,13 @@ export default function PlacesToExplorePage() {
                 </div>
 
                 <div className="container mx-auto px-6 md:px-12 lg:px-20 text-center relative z-10 max-w-3xl">
-                    <h2 className="text-4xl md:text-5xl font-display font-medium mb-8">Need help planning your itinerary?</h2>
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-medium mb-8">Need help planning your itinerary?</h2>
                     <p className="text-stone-300 text-lg mb-10 leading-relaxed font-light">
-                        Let us know your interests! We can arrange reliable taxis and help you plan the perfect route to explore these beautiful destinations without feeling rushed.
+                        Let us know your interests! From our <Link href="/farm-stay-rooms" className="text-accent hover:text-accent/80 underline decoration-accent/30 underline-offset-2 hover:decoration-accent transition-colors">farm stay in Kerala</Link>, we can arrange reliable taxis and help you plan the perfect route to explore these beautiful destinations without feeling rushed.
                     </p>
                     <Link
                         href="/book"
-                        className="inline-flex items-center justify-center px-8 py-4 bg-white text-stone-900 rounded-full font-bold tracking-wide hover:bg-white/90 transition-all hover:scale-105 shadow-[0_0_40px_rgba(255,255,255,0.2)]"
+                        className="inline-flex items-center justify-center px-5 sm:px-8 py-3 sm:py-4 text-[13px] sm:text-base whitespace-nowrap bg-white text-stone-900 rounded-full font-bold tracking-wide hover:bg-white/90 transition-all hover:scale-105 shadow-[0_0_40px_rgba(255,255,255,0.2)]"
                     >
                         Contact Host for Arrangements
                     </Link>

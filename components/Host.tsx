@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { Quote, Linkedin } from "lucide-react";
+import Link from "next/link";
+import { Linkedin, ArrowRight } from "lucide-react";
 
 export default function Host() {
     return (
-        <section className="py-20 bg-[#F9F9F7] relative overflow-hidden" id="host">
+        <section className="py-16 md:py-20 bg-[#F9F9F7] relative overflow-hidden" id="host">
             <div className="absolute inset-0 bg-pattern-paper opacity-50"></div>
             <div className="container mx-auto px-6 md:px-12 lg:px-20 relative z-10">
                 <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
@@ -14,9 +15,10 @@ export default function Host() {
                     <div className="w-full lg:w-4/12 relative">
                         <div className="aspect-[3/4] relative rounded-2xl overflow-hidden shadow-xl rotate-1 hover:rotate-0 transition-transform duration-500">
                             <Image
-                                src="/host-home-new.jpg"
+                                src="/images/host/host-home-new.jpg"
                                 alt="Murali - Host of Sukrutham Farmstay"
                                 fill
+                                sizes="(max-width: 1024px) 100vw, 33vw"
                                 className="object-cover"
                             />
                         </div>
@@ -39,7 +41,7 @@ export default function Host() {
 
                             <div className="prose prose-lg text-stone-600 leading-relaxed">
                                 <p className="mb-6 relative">
-                                    <span className="text-6xl text-[#8F9E8B]/40 float-left mr-2 -mt-4 font-serif leading-none">“</span>
+                                    <span className="text-4xl md:text-6xl text-[#8F9E8B]/40 float-left mr-2 -mt-4 font-serif leading-none">“</span>
                                     <span>
                                         Hi, I’m K P Murali —
                                     </span>
@@ -63,9 +65,17 @@ export default function Host() {
                                     Since opening in January 2023, I’ve been here every day, personally ensuring your stay is warm, perfect, and memorable. Whether I'm helping you discover a hidden local waterfall or we’re just sharing stories over a fresh coffee on the verandah, I’m here to welcome you home to the Kerala I love.
                                 </p>
 
-                                <div className="flex items-center gap-2 mt-8 pt-6 border-t border-stone-200/60">
-                                    <p className="font-medium text-stone-800">
-                                        To hear from me more — <a href="https://www.linkedin.com/in/kpmurali/" target="_blank" rel="noopener noreferrer" className="font-bold text-primary hover:text-primary-dark transition-colors inline-flex items-center gap-1 underline decoration-primary/30 underline-offset-4 hover:decoration-primary">
+                                <div className="flex flex-col sm:flex-row items-center gap-6 mt-8 pt-6 border-t border-stone-200/60 justify-start">
+                                    <Link
+                                        href="/our-story"
+                                        className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-5 sm:px-8 py-2.5 sm:py-3 text-[13px] sm:text-base whitespace-nowrap rounded-full font-semibold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
+                                    >
+                                        Learn More About Us
+                                        <ArrowRight className="w-4 h-4" />
+                                    </Link>
+
+                                    <p className="font-medium text-stone-600 text-sm">
+                                        or <a href="https://www.linkedin.com/in/kpmurali/" target="_blank" rel="noopener noreferrer" className="font-bold text-primary hover:text-primary-dark transition-colors inline-flex items-center gap-1 underline decoration-primary/30 underline-offset-4 hover:decoration-primary ml-1">
                                             connect with me
                                             <Linkedin className="w-4 h-4" />
                                         </a>

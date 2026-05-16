@@ -1,8 +1,9 @@
 "use client";
 
-import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, Quote, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import { testimonials } from "./testimonials-data";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 // Rating Summary Component
@@ -16,16 +17,16 @@ const RatingSummary = () => {
 
     return (
         <div className="max-w-5xl mx-auto mb-6 animate-in slide-in-from-bottom-4 duration-700">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-2 md:gap-8">
                 {categories.map((cat, idx) => (
                     <div key={idx} className="flex flex-col items-center justify-center text-center">
-                        <span className="text-3xl font-display font-bold text-stone-800 mb-1">{cat.rating}.0</span>
+                        <span className="text-2xl md:text-3xl font-display font-bold text-stone-800 mb-1">{cat.rating}.0</span>
                         <div className="flex text-accent mb-1">
                             {[...Array(5)].map((_, i) => (
                                 <Star key={i} className="w-4 h-4 fill-current" />
                             ))}
                         </div>
-                        <span className="text-stone-500 text-xs font-bold uppercase tracking-wider">{cat.label}</span>
+                        <span className="text-stone-500 text-[10px] md:text-xs font-bold uppercase tracking-wider">{cat.label}</span>
                     </div>
                 ))}
             </div>
@@ -55,7 +56,7 @@ const ScrollerRow = ({
         if (!scroller) return;
 
         let animationFrameId: number;
-        let position = direction === "right" ? -scroller.scrollWidth / 3 : 0; // Start offset if needed
+        const position = direction === "right" ? -scroller.scrollWidth / 3 : 0; // Start offset if needed
         const speed = 1.0; // Faster speed
 
         const animate = () => {
@@ -100,15 +101,27 @@ const ScrollerRow = ({
     };
 
     return (
-        <div className="relative group/row max-w-[100vw] overflow-hidden">
+        <div 
+            className="relative group/row max-w-[100vw] overflow-hidden"
+            onPointerEnter={() => setIsPaused(true)}
+            onPointerLeave={() => setIsPaused(false)}
+            onPointerCancel={() => setIsPaused(false)}
+        >
             {/* Side Gradients for Blur Effect - Wider and with Backdrop Blur */}
-            <div className="absolute left-0 top-0 bottom-0 w-32 md:w-64 bg-gradient-to-r from-stone-50 via-stone-50/80 to-transparent z-20 pointer-events-none backdrop-blur-[2px]" />
-            <div className="absolute right-0 top-0 bottom-0 w-32 md:w-64 bg-gradient-to-l from-stone-50 via-stone-50/80 to-transparent z-20 pointer-events-none backdrop-blur-[2px]" />
+            <div 
+                className="absolute left-0 top-0 bottom-0 w-12 sm:w-20 md:w-64 bg-gradient-to-r from-stone-50 via-stone-50/80 to-transparent z-20 pointer-events-none backdrop-blur-[2px]" 
+                style={{ WebkitBackdropFilter: 'blur(2px)' }}
+            />
+            <div 
+                className="absolute right-0 top-0 bottom-0 w-12 sm:w-20 md:w-64 bg-gradient-to-l from-stone-50 via-stone-50/80 to-transparent z-20 pointer-events-none backdrop-blur-[2px]" 
+                style={{ WebkitBackdropFilter: 'blur(2px)' }}
+            />
 
             {/* Manual Controls - Visible on Hover/Interaction */}
             <button
                 onClick={() => scrollManual("prev")}
                 className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full shadow-md flex items-center justify-center text-stone-700 hover:bg-white hover:scale-110 transition-all opacity-0 group-hover/row:opacity-100"
+                style={{ WebkitBackdropFilter: 'blur(4px)' }}
                 aria-label="Scroll Left"
             >
                 <ChevronLeft className="w-5 h-5" />
@@ -116,6 +129,7 @@ const ScrollerRow = ({
             <button
                 onClick={() => scrollManual("next")}
                 className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full shadow-md flex items-center justify-center text-stone-700 hover:bg-white hover:scale-110 transition-all opacity-0 group-hover/row:opacity-100"
+                style={{ WebkitBackdropFilter: 'blur(4px)' }}
                 aria-label="Scroll Right"
             >
                 <ChevronRight className="w-5 h-5" />
@@ -124,13 +138,11 @@ const ScrollerRow = ({
             <div
                 ref={scrollerRef}
                 className="flex gap-8 py-8 overflow-x-hidden no-scrollbar w-full px-4"
-                onMouseEnter={() => setIsPaused(true)}
-                onMouseLeave={() => setIsPaused(false)}
             >
                 {displayItems.map((item, idx) => (
                     <div
                         key={idx}
-                        className="w-[350px] md:w-[450px] relative rounded-2xl border border-stone-200 bg-white p-8 flex-shrink-0 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1 flex flex-col justify-between group h-auto"
+                        className="w-[280px] md:w-[450px] relative rounded-2xl border border-stone-200 bg-white p-6 md:p-8 flex-shrink-0 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1 flex flex-col justify-between group h-auto"
                     >
                         <Quote className="absolute top-6 right-6 w-8 h-8 text-primary/10 group-hover:text-primary/20 transition-colors" />
 
@@ -163,14 +175,14 @@ export default function Testimonials() {
     const secondRow = testimonials.slice(midpoint);
 
     return (
-        <section className="py-24 bg-stone-50 relative overflow-hidden" id="testimonials">
-            <div className="container mx-auto px-6 mb-12 text-center relative z-10">
+        <section className="py-16 md:py-20 bg-stone-50 relative overflow-hidden" id="testimonials">
+            <div className="container mx-auto px-6 md:px-12 lg:px-20 mb-12 text-center relative z-10">
                 <span className="text-primary font-semibold tracking-wider uppercase text-sm">Guest Love</span>
-                <h2 className="text-4xl md:text-5xl font-display font-bold mt-2 mb-6 text-stone-800">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mt-2 mb-6 text-stone-800">
                     Stories from Sukrutham
                 </h2>
                 <p className="text-stone-500 max-w-2xl mx-auto text-lg leading-relaxed mb-10">
-                    Don&apos;t just take our word for it. Here is what travelers from around the world have to say about their stay.
+                    Don&apos;t just take our word for it. Here is what travelers from around the world have to say about their experience with our farm stay in Kerala.
                 </p>
 
                 <RatingSummary />
@@ -187,6 +199,17 @@ export default function Testimonials() {
 
                 {/* Row 2: Right to Left */}
                 <ScrollerRow items={secondRow} direction="left" />
+            </div>
+
+            {/* Read All CTA */}
+            <div className="container mx-auto px-6 md:px-12 lg:px-20 mt-16 text-center relative z-20">
+                <Link
+                    href="/our-guests"
+                    className="inline-flex items-center gap-3 px-5 sm:px-8 py-3 sm:py-4 text-[13px] sm:text-base whitespace-nowrap bg-primary hover:bg-primary-dark text-white font-bold rounded-full transition-all duration-300 shadow-lg shadow-primary/30 group hover:-translate-y-1"
+                >
+                    <span>Read All Guest Stories</span>
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
             </div>
         </section>
     );

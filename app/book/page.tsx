@@ -63,16 +63,18 @@ export default function BookPage() {
     const [num1, setNum1] = useState(0);
     const [num2, setNum2] = useState(0);
     const [securityAnswer, setSecurityAnswer] = useState("");
-    const [isSubmitted, setIsSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [redirectUrl, setRedirectUrl] = useState("");
 
     const [checkInDate, setCheckInDate] = useState("");
     const today = new Date().toISOString().split('T')[0];
 
-    // Generate math puzzle on mount
+    // Generate math puzzle and get origin on mount
     useEffect(() => {
         setNum1(Math.floor(Math.random() * 10) + 1);
         setNum2(Math.floor(Math.random() * 10) + 1);
+        setRedirectUrl(window.location.origin + "/thank-you");
     }, []);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -89,7 +91,7 @@ export default function BookPage() {
         const data = Object.fromEntries(formData.entries());
 
         try {
-            const response = await fetch("https://formsubmit.co/ajax/sukruthamfarmstay@gmail.com", {
+            const response = await fetch("/contact.php", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -103,11 +105,7 @@ export default function BookPage() {
             });
 
             if (response.ok) {
-                setIsSubmitted(true);
-                setTimeout(() => setIsSubmitted(false), 8000); // Reset after 8s
-                e.currentTarget.reset();
-                setSecurityAnswer("");
-                setCheckInDate("");
+                window.location.href = "/thank-you";
             } else {
                 alert("Something went wrong with the submission. Please try again or contact the host directly.");
             }
@@ -120,7 +118,7 @@ export default function BookPage() {
     };
 
     return (
-        <main className="min-h-screen bg-stone-50 selection:bg-primary/20 selection:text-primary-dark">
+        <main className="min-h-screen bg-stone-50 selection:bg-primary/20 selection:text-primary-dark overflow-x-hidden">
             <Navbar variant="transparent" />
 
             {/* Page Header as Hero Image */}
@@ -128,14 +126,14 @@ export default function BookPage() {
                 <div
                     className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
                     style={{
-                        backgroundImage: "url('/my-farm.jpg')",
+                        backgroundImage: "url('/images/farm-stay/my-farm.jpg')",
                     }}
                 >
                     <div className="absolute inset-0 bg-black/50" />
                 </div>
 
                 <div className="relative z-10">
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white mb-6 drop-shadow-lg">
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl lg:text-6xl font-display font-bold text-white mb-6 drop-shadow-lg">
                         Book Your Experience
                     </h1>
                     <p className="text-lg md:text-xl text-stone-200 max-w-2xl mx-auto font-light leading-relaxed drop-shadow-sm">
@@ -204,7 +202,7 @@ export default function BookPage() {
                                             {/* Contact Number */}
                                             <div className="space-y-2">
                                                 <label className="text-sm font-bold text-stone-700">Contact Number*</label>
-                                                <input type="tel" name="Phone" required placeholder="+91 98765 43210" className="w-full bg-stone-50 border border-stone-200 text-stone-700 px-4 py-3 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-stone-400" />
+                                                <input type="tel" name="Phone" required placeholder="+91 9940668754" className="w-full bg-stone-50 border border-stone-200 text-stone-700 px-4 py-3 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-stone-400" />
                                             </div>
                                         </div>
 
@@ -351,7 +349,7 @@ export default function BookPage() {
                     <div className="lg:col-span-5 space-y-8">
                         {/* Host Contact Block */}
                         <ScrollAnimation delay={100}>
-                            <div className="bg-emerald-900 text-white p-8 md:p-10 rounded-[2rem] shadow-xl relative overflow-hidden group">
+                            <div className="bg-emerald-900 text-white p-6 sm:p-10 rounded-[2rem] shadow-xl relative overflow-hidden group">
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/20 blur-[50px] rounded-full group-hover:bg-amber-500/30 transition-colors duration-500"></div>
 
                                 <div className="flex items-center gap-4 mb-6 relative z-10">
@@ -373,14 +371,14 @@ export default function BookPage() {
                                         <div className="p-2 bg-white/5 rounded-lg text-amber-400"><Phone className="w-5 h-5" /></div>
                                         <div>
                                             <p className="text-xs text-stone-400 uppercase tracking-wider mb-1">Call / WhatsApp</p>
-                                            <a href="tel:+919940668754" className="text-lg font-bold hover:text-amber-400 transition-colors">+91 99406 68754</a>
+                                            <a href="tel:+919940668754" className="text-base sm:text-lg font-bold hover:text-accent transition-colors">+91 99406 68754</a>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-4">
                                         <div className="p-2 bg-white/5 rounded-lg text-amber-400"><Mail className="w-5 h-5" /></div>
                                         <div>
                                             <p className="text-xs text-stone-400 uppercase tracking-wider mb-1">Email</p>
-                                            <a href="mailto:sukruthamfarmstay@gmail.com" className="text-lg font-bold hover:text-amber-400 transition-colors">sukruthamfarmstay@gmail.com</a>
+                                            <a href="mailto:sukruthamfarmstay@gmail.com" className="text-base sm:text-lg font-bold hover:text-accent transition-colors break-all">sukruthamfarmstay@gmail.com</a>
                                         </div>
                                     </div>
                                 </div>
@@ -389,7 +387,7 @@ export default function BookPage() {
 
                         {/* Location Details Block */}
                         <ScrollAnimation delay={200}>
-                            <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-stone-100">
+                            <div className="bg-white p-6 sm:p-8 rounded-[2rem] shadow-xl border border-stone-100">
                                 <h3 className="text-xl font-bold text-stone-900 flex items-center gap-3 mb-6">
                                     <MapPin className="w-5 h-5 text-primary" />
                                     Location Address
@@ -397,8 +395,7 @@ export default function BookPage() {
                                 <div className="text-stone-600 leading-relaxed bg-stone-50 p-5 rounded-xl border border-stone-100 mb-6 font-medium">
                                     <p>9/397 B, Sukrutham Farmstay,</p>
                                     <p>Kuttetan Road, Ambalapad,</p>
-                                    <p>Kerala 680028</p>
-                                    <p>India</p>
+                                    <p>Kerala 680028, India</p>
                                 </div>
 
                                 {/* Map Embed */}

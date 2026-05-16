@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
     Trees, Utensils, ChefHat, Droplet, Accessibility,
     Wifi, Sun, Laptop, Signal,
@@ -141,28 +142,28 @@ export default function Amenities() {
     const [activeTab, setActiveTab] = useState(0);
 
     return (
-        <section className="pt-12 pb-6 bg-white relative" id="amenities">
+        <section className="pt-16 md:pt-20 pb-8 md:pb-10 bg-white relative" id="amenities">
             <div className="absolute inset-0 bg-pattern-dots text-stone-200 mask-gradient-b"></div>
             <div className="container mx-auto px-6 md:px-12 lg:px-20 relative z-10">
                 {/* Heading */}
-                <div className="text-center max-w-4xl mx-auto mb-10 px-6 md:px-12 lg:px-20">
+                <div className="text-center max-w-4xl mx-auto mb-10">
                     <span className="text-primary font-semibold tracking-wider uppercase text-sm">Amenities</span>
                     <h2 className="text-3xl md:text-4xl font-display font-bold mt-2 mb-4 text-stone-800">
                         18+ Thoughtful Onsite Amenities
                     </h2>
                     <p className="text-stone-600 text-lg leading-relaxed">
-                        From modern comforts to authentic farm experiences, we’ve thought of everything.
+                        From modern comforts to authentic farm experiences, our <Link href="/farm-stay-rooms" className="text-primary hover:text-primary-dark underline decoration-primary/30 underline-offset-2 hover:decoration-primary transition-colors font-medium">farm stay in Kerala</Link> has thought of everything.
                     </p>
                 </div>
 
                 {/* Mobile: Simple Select Dropdown or just stack them? 
                     Let's use a scrolling tab list for mobile friendly UX */}
-                <div className="flex flex-wrap justify-center gap-2 mb-10">
+                <div className="flex overflow-x-auto md:flex-wrap md:justify-center gap-2 mb-10 pb-4 px-2 md:px-0 -mx-6 md:mx-0 snap-x snap-mandatory scrollbar-hide">
                     {amenityGroups.map((group, index) => (
                         <button
                             key={index}
                             onClick={() => setActiveTab(index)}
-                            className={`px-6 py-3 rounded-full text-sm font-semibold transition-all duration-300 border ${activeTab === index
+                            className={`shrink-0 snap-start px-5 py-2.5 md:px-6 md:py-3 rounded-full text-xs md:text-sm font-semibold transition-all duration-300 border ${activeTab === index
                                 ? "bg-primary text-white border-primary shadow-lg scale-105"
                                 : "bg-stone-50 text-stone-600 border-stone-200 hover:bg-stone-100 hover:border-stone-300"
                                 }`}
@@ -178,7 +179,7 @@ export default function Amenities() {
                         {amenityGroups[activeTab].items.map((item, index) => (
                             <div
                                 key={index}
-                                className="flex items-start gap-4 p-5 rounded-xl bg-stone-50/50 border border-stone-100 hover:border-primary/20 hover:bg-white hover:shadow-sm transition-all duration-300 animate-in fade-in slide-in-from-bottom-2 duration-500 will-change-transform"
+                                className="flex items-start gap-4 p-5 rounded-xl bg-stone-50/50 border border-stone-100 hover:border-primary/20 hover:bg-white hover:shadow-sm transition-all duration-300 animate-in fade-in slide-in-from-bottom-2"
                                 style={{ animationDelay: `${index * 50}ms`, animationFillMode: 'both' }}
                             >
                                 <div className="shrink-0 p-3 bg-primary/10 rounded-full text-primary">

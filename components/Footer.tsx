@@ -1,29 +1,78 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, Youtube } from "lucide-react";
 
 export default function Footer() {
+    const [email, setEmail] = useState("");
+    const [redirectUrl, setRedirectUrl] = useState("");
+
+    useEffect(() => {
+        setRedirectUrl(window.location.origin + "/thank-you");
+    }, []);
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleSubscribe = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+            alert("Please enter a valid email address.");
+            return;
+        }
+        
+        setIsSubmitting(true);
+        try {
+            const response = await fetch("/contact.php", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    _subject: "New Newsletter Subscription",
+                    email: email,
+                    message: "Please add my email address to your newsletter subscription list."
+                })
+            });
+
+            if (response.ok) {
+                window.location.href = "/subscription-successful";
+            } else {
+                alert("Something went wrong. Please try again.");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Failed to subscribe. Please try again later.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     return (
         <footer className="bg-stone-900 text-stone-300 py-16" id="footer">
             <div className="container mx-auto px-6 md:px-12">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
                     {/* Brand */}
                     <div className="space-y-4">
-                        <Link href="/" className="relative block h-16 w-48 md:h-24 md:w-64 mb-2 mt-4">
+                        <Link href="/" className="block relative mb-8">
                             <Image
                                 src="/logo/logo.png"
                                 alt="Sukrutham Farmstay"
-                                fill
-                                className="object-contain object-left scale-[1.35] origin-left"
+                                width={180}
+                                height={60}
+                                className="w-[180px] h-[60px] object-contain object-left"
                             />
                         </Link>
                         <p className="text-sm leading-relaxed">
                             An authentic experience of Kerala hospitality while absorbing the delightful beauty of God&apos;s Own Country.
                         </p>
                         <div className="flex space-x-4">
-                            <Link href="#" className="hover:text-accent transition-colors"><Facebook className="w-5 h-5" /></Link>
-                            <Link href="#" className="hover:text-accent transition-colors"><Instagram className="w-5 h-5" /></Link>
-                            <Link href="#" className="hover:text-accent transition-colors"><Twitter className="w-5 h-5" /></Link>
+                            <Link href="https://facebook.com/sukruthamfarmstay" target="_blank" className="hover:text-accent transition-colors"><Facebook className="w-5 h-5" /></Link>
+                            <Link href="https://instagram.com/sukruthamfarmstay" target="_blank" className="hover:text-accent transition-colors"><Instagram className="w-5 h-5" /></Link>
+                            <Link href="https://linkedin.com/company/sukruthamfarmstay/" target="_blank" className="hover:text-accent transition-colors"><Linkedin className="w-5 h-5" /></Link>
+                            <Link href="https://www.youtube.com/@SukruthamFarmStay" target="_blank" className="hover:text-accent transition-colors"><Youtube className="w-5 h-5" /></Link>
                         </div>
                     </div>
 
@@ -32,11 +81,12 @@ export default function Footer() {
                         <h4 className="text-lg font-bold text-white">Quick Links</h4>
                         <ul className="space-y-2 text-sm">
                             <li><Link href="/" className="hover:text-accent transition-colors">Home</Link></li>
-                            <li><Link href="#rooms" className="hover:text-accent transition-colors">Rooms</Link></li>
-                            <li><Link href="#activities" className="hover:text-accent transition-colors">Activities</Link></li>
+                            <li><Link href="/farm-stay-rooms" className="hover:text-accent transition-colors">Rooms</Link></li>
+                            <li><Link href="/experience/activities" className="hover:text-accent transition-colors">Activities</Link></li>
                             <li><Link href="/our-story" className="hover:text-accent transition-colors">About Us</Link></li>
                             <li><Link href="/blog" className="hover:text-accent transition-colors">Blog</Link></li>
-                            <li><Link href="#testimonials" className="hover:text-accent transition-colors">Testimonials</Link></li>
+                            <li><Link href="/faq" className="hover:text-accent transition-colors">FAQ</Link></li>
+                            <li><Link href="/our-guests" className="hover:text-accent transition-colors">Our Guests</Link></li>
                         </ul>
                     </div>
 
@@ -46,15 +96,19 @@ export default function Footer() {
                         <ul className="space-y-3 text-sm">
                             <li className="flex items-start gap-3">
                                 <MapPin className="w-5 h-5 text-accent shrink-0" />
-                                <span>Sukrutham Farmstay, Thrissur, Kerala, India</span>
+                                <div className="flex flex-col">
+                                    <span>9/397 B, Sukrutham Farmstay,</span>
+                                    <span>Kuttetan Road, Ambalapad,</span>
+                                    <span>Kerala 680028, India</span>
+                                </div>
                             </li>
                             <li className="flex items-center gap-3">
                                 <Phone className="w-5 h-5 text-accent shrink-0" />
-                                <span>+91 98765 43210</span>
+                                <a href="tel:+919940668754" className="hover:text-accent transition-colors">+91 9940668754</a>
                             </li>
                             <li className="flex items-center gap-3">
                                 <Mail className="w-5 h-5 text-accent shrink-0" />
-                                <span>info@sukruthamfarmstay.com</span>
+                                <a href="mailto:sukruthamfarmstay@gmail.com" className="hover:text-accent transition-colors">sukruthamfarmstay@gmail.com</a>
                             </li>
                         </ul>
                     </div>
@@ -63,14 +117,18 @@ export default function Footer() {
                     <div className="space-y-4">
                         <h4 className="text-lg font-bold text-white">Newsletter</h4>
                         <p className="text-sm">Subscribe to get special offers and updates.</p>
-                        <form className="flex flex-col gap-2">
+                        <form onSubmit={handleSubscribe} className="flex flex-col gap-2">
                             <input
                                 type="email"
+                                name="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Your email address"
+                                required
                                 className="bg-stone-800 border border-stone-700 rounded px-4 py-2 text-sm focus:outline-none focus:border-primary text-white"
                             />
-                            <button className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded text-sm font-semibold transition-colors">
-                                Subscribe
+                            <button type="submit" disabled={isSubmitting} className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded text-sm font-semibold transition-colors disabled:opacity-70 disabled:cursor-not-allowed">
+                                {isSubmitting ? "Subscribing..." : "Subscribe"}
                             </button>
                         </form>
                     </div>

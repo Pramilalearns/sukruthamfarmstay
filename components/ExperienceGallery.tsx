@@ -5,59 +5,66 @@ import { cn } from "@/lib/utils";
 
 const galleryImages = [
     {
-        src: "/gallery-1.jpg",
+        src: "/Home-Essence/Life-on-the-Farm-Experience-the-rhythm-of-daily-life-amidst-natures-abundance.jpeg",
         alt: "Sukrutham Farm Life",
         title: "Life on the Farm",
         description: "Experience the rhythm of daily life amidst nature's abundance.",
         className: "bg-stone-100"
     },
     {
-        src: "/gallery-2.jpg",
+        src: "/Home-Essence/Natures-Canvas-Wake-up-to-breathtaking-views-of-lush-greenery.jpeg",
         alt: "Verdant Landscapes",
         title: "Nature's Canvas",
-        description: "Wake up to breathtaking views of lush greenery and misty hills.",
+        description: "Wake up to breathtaking views of lush greenery.",
         className: "bg-stone-200"
     },
     {
-        src: "/gallery-3.jpg",
+        src: "/Home-Essence/The-Harvest-Participate-in-the-joy-of-reaping-what-we-sow-in-our-organic-fields.jpeg",
         alt: "Harvest Season",
         title: "The Harvest",
         description: "Participate in the joy of reaping what we sow in our organic fields.",
         className: "bg-emerald-100"
     },
     {
-        src: "/gallery-4.jpg",
-        alt: "Local Interactions",
-        title: "Community Spirit",
-        description: "Connect with the warm and welcoming local community.",
+        src: "/Home-Essence/IMG_4129.jpeg",
+        alt: "Shared Moments",
+        title: "Shared Moments",
+        description: "A welcoming space to reconnect and share joyful experiences together.",
         className: "bg-orange-100"
     },
     {
-        src: "/gallery-5.jpg",
+        src: "/Home-Essence/Rooted-in-Tradition-Witness-age-old-farming-techniques-preserved-with-care.jpeg",
         alt: "Traditional Farming",
         title: "Rooted in Tradition",
         description: "Witness age-old farming techniques preserved with care.",
         className: "bg-yellow-100"
     },
     {
-        src: "/gallery-6.jpg",
-        alt: "Peaceful Momements",
+        src: "/Home-Essence/Serenity-Now-Find-your-inner-peace-in-the-breathtaking-views-of-the-farmstay.jpeg",
+        alt: "Peaceful Moments",
         title: "Serenity Now",
-        description: "Find your inner peace in the quiet corners of the farmstay.",
+        description: "Find your inner peace in the breathtaking views around the farmstay.",
         className: "bg-blue-100"
     },
     {
-        src: "/gallery-7.jpg",
+        src: "/Home-Essence/Golden-Hours-Stroll-through-the-fields-as-the-sun-sets,-painting-the-sky-in-gold.jpeg",
         alt: "Evening Walks",
         title: "Golden Hours",
         description: "Stroll through the fields as the sun sets, painting the sky in gold.",
         className: "bg-red-100"
     },
+    {
+        src: "/Home-Essence/5.png",
+        alt: "Our friendly dog Chippi",
+        title: "Meet Chippi",
+        description: "Say hello to Chippi, our ever-cheerful farmstay companion who loves greeting every guest with a wag and a smile.",
+        className: "bg-amber-100"
+    },
 ];
 
 export default function ExperienceGallery() {
     return (
-        <section className="py-24 bg-stone-50" id="gallery">
+        <section className="py-16 md:py-20 bg-stone-50" id="gallery">
             <div className="container mx-auto px-6 md:px-12 lg:px-20">
                 <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 relative">
 
@@ -66,7 +73,7 @@ export default function ExperienceGallery() {
                         <span className="text-primary font-semibold tracking-wider uppercase text-sm mb-4">
                             The Essence
                         </span>
-                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-stone-900 leading-[1.1]">
+                        <h2 className="text-3xl md:text-4xl lg:text-5xl lg:text-6xl font-display font-bold text-stone-900 leading-[1.1]">
                             When we say <span className="italic text-accent">Sukrutham Experience</span>, this is what we mean :)
                         </h2>
                         <p className="mt-6 text-lg text-stone-600 leading-relaxed">
@@ -86,17 +93,19 @@ export default function ExperienceGallery() {
                                     // To make them stack properly, the container needs height. 
                                     // Actually, a simpler 'stack' visual for this request with sticky:
                                     // Just sticky top. 
-                                    top: `${120 + (idx * 20)}px`,
+                                    top: `${80 + (idx * 20)}px`,
                                     zIndex: idx + 1,
                                     // Random slight rotation for 'scattered' stack feel
-                                    transform: `rotate(${idx % 2 === 0 ? 1 : -1}deg)`
+                                    transform: `rotate(${idx % 2 === 0 ? 0.5 : -0.5}deg)`
                                 }}
                             >
-                                <div className={cn("relative h-[450px] md:h-[550px] w-full", img.className)}>
+                                <div className={cn("relative h-[350px] md:h-[450px] lg:h-[500px] w-full", img.className)}>
                                     <Image
                                         src={img.src}
                                         alt={img.alt}
                                         fill
+                                        priority={idx <= 1}
+                                        quality={60}
                                         className="object-cover"
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 50vw"
                                     />

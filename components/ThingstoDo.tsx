@@ -7,40 +7,41 @@ const experiences = [
     {
         title: "Farm Activities",
         description: "Try pottery making, join us in the organic garden, or walk our forest trails. Simple, hands-on fun for everyone.",
-        image: "/pottery.png",
-        link: "/activities/farm-activities",
+        image: "/activities-page/hd_village_pottery.png",
+        link: "/experience/activities",
         // Tall vertical block (Col 1, Row 1-2)
         className: "md:col-span-1 md:row-span-2",
     },
     {
         title: "Local Sightseeing",
         description: "We are close to the best places to visit in Thrissur, including waterfalls, dams, and historic temples.",
-        image: "/sightseeing-v2.png",
+        image: "/Home-Experience/dam.jpeg",
         link: "/experience/places-to-explore",
         // Wide horizontal block (Col 2-3, Row 1)
         className: "md:col-span-2 md:row-span-1",
     },
     {
         title: "Local Savor (Food)",
-        description: "Enjoy home-cooked Kerala meals made with fresh ingredients from our own farm. Real farm-to-table dining.",
-        image: "/kerala-food-v2.png",
-        link: "/activities/food",
+        description: "Enjoy home-cooked authentic Kerala cuisines made with fresh ingredients from our own farm. You will experience the real farm-to-table dining.",
+        image: "/Home-Experience/local-food.jpeg",
+        link: "/experience/local-savor",
         // Tall vertical block (Col 4, Row 1-2)
         className: "md:col-span-1 md:row-span-2",
+        objectPosition: "object-center",
     },
     {
         title: "Seasons & Festivals",
         description: "Experience the famous Thrissur Pooram festivals or the beauty of the Kerala monsoon right from the farm.",
-        image: "/festival.png",
-        link: "/activities/festivals",
+        image: "/images/misc/festival.png",
+        link: "/experience/seasons-festivals",
         // Standard block (Col 2, Row 2)
         className: "md:col-span-1 md:row-span-1",
     },
     {
         title: "Ready-Made Itineraries",
         description: "We’ve designed 1, 2, and 3-day plans for you. We do the planning; you do the relaxing.",
-        image: "/itinerary.jpg",
-        link: "/activities/itineraries",
+        image: "/images/farm-stay/itinerary.jpg",
+        link: "/experience/itineraries",
         // Standard block (Col 3, Row 2)
         className: "md:col-span-1 md:row-span-1",
     }
@@ -48,13 +49,13 @@ const experiences = [
 
 export default function Experience() {
     return (
-        <section className="py-12 bg-stone-50" id="experience">
+        <section className="py-16 md:py-20 bg-stone-50 relative" id="experience">
             <div className="container mx-auto px-6 md:px-12 lg:px-20">
                 {/* Heading */}
                 <div className="text-center max-w-3xl mx-auto mb-10">
                     <span className="text-primary font-semibold tracking-wider uppercase text-sm">Experiences</span>
-                    <h2 className="text-4xl md:text-5xl font-display font-bold mt-2 mb-4 text-stone-800 leading-tight">
-                        Beyond the Farm: <br /> Things to Do and See
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mt-2 mb-4 text-stone-800 leading-tight">
+                        Beyond the Farm: <br /> Things to do and see in Kerala
                     </h2>
                     <p className="text-stone-600 text-lg leading-relaxed max-w-2xl mx-auto">
                         Some truly unique ways to enjoy Kerala, God&apos;s Own Country. From adrenaline rushes to deep relaxation.
@@ -74,13 +75,14 @@ export default function Experience() {
                                 src={item.image}
                                 alt={item.title}
                                 fill
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 quality={95}
-                                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                className={`object-cover transition-transform duration-700 group-hover:scale-110 ${item.objectPosition || ''}`}
                             />
                             {/* Gradient Overlay - Darker at bottom for text readability */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300" />
 
-                            <div className="absolute bottom-0 left-0 p-8 w-full flex flex-col justify-end h-full">
+                            <div className="absolute bottom-0 left-0 p-5 md:p-8 w-full flex flex-col justify-end h-full">
                                 <div className="mt-auto">
                                     <h3 className="text-2xl font-display font-bold text-white mb-2 leading-tight">{item.title}</h3>
                                     <p className="text-white/90 text-sm leading-relaxed mb-6 line-clamp-3">
@@ -96,7 +98,10 @@ export default function Experience() {
 
                                         {/* Hover State: Glass Button */}
                                         <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
-                                            <span className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white text-sm font-semibold hover:bg-white/30 transition-colors">
+                                            <span 
+                                                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white text-sm font-semibold hover:bg-white/30 transition-colors"
+                                                style={{ WebkitBackdropFilter: 'blur(12px)' }}
+                                            >
                                                 View Details <ArrowRight className="w-4 h-4" />
                                             </span>
                                         </div>
@@ -110,8 +115,8 @@ export default function Experience() {
                 {/* CTA */}
                 <div className="mt-10 text-center">
                     <Link
-                        href="#contact"
-                        className="inline-flex items-center gap-2 px-8 py-3 bg-primary text-white rounded-full font-semibold hover:bg-primary/90 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
+                        href="/experience"
+                        className="inline-flex items-center gap-2 px-5 sm:px-8 py-2.5 sm:py-3 text-[13px] sm:text-base whitespace-nowrap bg-primary text-white rounded-full font-semibold hover:bg-primary/90 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
                     >
                         Explore All Experiences
                         <ArrowRight className="w-4 h-4" />

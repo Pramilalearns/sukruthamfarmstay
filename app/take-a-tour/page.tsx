@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import TourGallery from "@/components/TourGallery";
+import Link from "next/link";
 
 
 export const metadata = {
@@ -8,7 +9,41 @@ export const metadata = {
     description: "Watch our tour video and explore the photo gallery of Sukrutham Farmstay. Experience the authentic Kerala heritage and organic farming life.",
 };
 
+import fs from "fs";
+import path from "path";
+
 export default function TakeATour() {
+    // Dynamically read images from the specified folder
+    const interiorDirPath = path.join(process.cwd(), "public", "take-a-tour-page", "Interior-and-Exterior");
+    const farmDirPath = path.join(process.cwd(), "public", "take-a-tour-page", "Around-the-farm");
+    const natureDirPath = path.join(process.cwd(), "public", "take-a-tour-page", "Near-the-farm");
+    
+    let dynamicStayImages: { src: string; alt: string }[] = [];
+    let dynamicFarmImages: { src: string; alt: string }[] = [];
+    let dynamicNatureImages: { src: string; alt: string }[] = [];
+
+    const getImagesFromDir = (dirPath: string, publicPath: string) => {
+        try {
+            if (fs.existsSync(dirPath)) {
+                const files = fs.readdirSync(dirPath);
+                return files
+                    .filter(file => /\.(jpg|jpeg|png|webp|gif|avif)$/i.test(file))
+                    .map(file => ({
+                        src: `${publicPath}/${file}`,
+                        alt: file.split(".")[0].replace(/-/g, " ").replace(/_/g, " ")
+                            .split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+                    }));
+            }
+        } catch (error) {
+            console.error(`Error reading images directory at ${dirPath}:`, error);
+        }
+        return [];
+    };
+
+    dynamicStayImages = getImagesFromDir(interiorDirPath, "/take-a-tour-page/Interior-and-Exterior");
+    dynamicFarmImages = getImagesFromDir(farmDirPath, "/take-a-tour-page/Around-the-farm");
+    dynamicNatureImages = getImagesFromDir(natureDirPath, "/take-a-tour-page/Near-the-farm");
+
     return (
         <main className="min-h-screen bg-stone-50 selection:bg-primary/20 selection:text-primary-dark">
             <Navbar variant="light" />
@@ -18,12 +53,12 @@ export default function TakeATour() {
                 <div className="container mx-auto max-w-6xl">
                     <div className="text-center mb-16">
                         <span className="text-primary font-semibold tracking-wider uppercase text-sm mb-4 block">
-                            The Sukrutham Journey
+                            Sukrutham Farmstay Journey
                         </span>
-                        <h1 className="text-5xl md:text-7xl font-display font-bold text-stone-900 mb-8 leading-tight">
+                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold text-stone-900 mb-8 leading-tight">
                             A Soulful Base for <br /> <span className="text-stone-400 italic">Authentic Exploration</span>
                         </h1>
-                        <p className="text-xl md:text-2xl text-stone-600 max-w-3xl mx-auto leading-relaxed font-light">
+                        <p className="text-xl md:text-2xl text-stone-600 max-w-3xl mx-auto leading-relaxed">
                             Experience the perfect balance of a traditional farmstead and a gateway to the heart of Kerala. From our organic fields to the hidden gems of the region, begin your journey here.
                         </p>
                     </div>
@@ -52,7 +87,11 @@ export default function TakeATour() {
             </section>
 
             {/* Gallery Section */}
-            <TourGallery />
+            <TourGallery 
+                initialStayImages={dynamicStayImages} 
+                initialFarmImages={dynamicFarmImages} 
+                initialNatureImages={dynamicNatureImages}
+            />
 
             <Footer />
         </main>

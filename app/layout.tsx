@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter } from "next/font/google"; // changed from Geist
+import { GoogleTagManager } from '@next/third-parties/google';
+import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
+import FloatingCTA from "@/components/FloatingCTA";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -24,10 +26,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <GoogleTagManager gtmId="GTM-TDFR28C" />
+      <head>
+        <link rel="preconnect" href="https://images.unsplash.com" />
+      </head>
       <body
         className={`${playfair.variable} ${inter.variable} antialiased bg-stone-50 text-stone-900`}
       >
         {children}
+        <FloatingCTA />
       </body>
     </html>
   );

@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown, Phone } from "lucide-react";
+import { Menu, X, ChevronDown, ChevronRight, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface NavbarProps {
@@ -43,10 +43,10 @@ const Navbar = ({ variant = "transparent" }: NavbarProps) => {
     }, []);
 
     const experienceLinks = [
-        { name: "Activities", href: "/#activities" },
+        { name: "Activities", href: "/experience/activities" },
         { name: "Places to Explore", href: "/experience/places-to-explore" },
-        { name: "Local Savor", href: "/#activities" }, // Placeholder
-        { name: "Seasons & Festivals", href: "/#activities" }, // Placeholder
+        { name: "Local Savor", href: "/experience/local-savor" },
+        { name: "Seasons & Festivals", href: "/experience/seasons-festivals" },
         { name: "Itineraries", href: "/experience/itineraries" },
     ];
 
@@ -54,41 +54,60 @@ const Navbar = ({ variant = "transparent" }: NavbarProps) => {
         <nav
             className={cn(
                 "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out font-sans",
-                scrolled
-                    ? "bg-stone-50/90 backdrop-blur-md shadow-sm py-[9px]" // Reduced scrolled padding
-                    : "bg-transparent py-[9px]" // Reduced transparent padding
+                (scrolled || variant === "light")
+                    ? "bg-stone-50 shadow-md" 
+                    : "bg-transparent"
             )}
+            style={{ 
+                height: '80px', 
+                padding: '0px',
+                backdropFilter: 'none',
+                WebkitBackdropFilter: 'none',
+                ...(scrolled ? {} : {})
+            }}
         >
-            <div className="container mx-auto px-6 md:px-12 flex items-center justify-between md:justify-start">
-                {/* Logo */}
-                <Link href="/" className="relative h-16 w-48 md:h-[88px] md:w-64 flex-shrink-0 z-50">
-                    <Image
-                        src="/logo/logo.png"
-                        alt="Sukrutham Farmstay"
-                        fill
-                        className="object-contain object-left md:object-center scale-[1.35] origin-left md:origin-center"
-                        priority
-                    />
-                </Link>
+            <div className="container mx-auto px-4 sm:px-6 md:px-10 flex items-center" style={{ height: '80px', minHeight: '80px' }}>
+                {/* Logo Section - Left side */}
+                <div className="flex-shrink-0 z-50">
+                    <Link href="/" className="block relative">
+                        <Image
+                            src="/logo/logo.png"
+                            alt="Sukrutham Farmstay"
+                            width={110}
+                            height={44}
+                            className="w-[110px] h-[44px] object-contain object-left md:w-[120px] md:h-[48px]"
+                            priority
+                        />
+                    </Link>
+                </div>
 
-                {/* Desktop Nav - Centered */}
-                <div className="hidden md:flex flex-1 items-center justify-center space-x-8">
+                {/* Left Spacer - Guaranteed equal to Right Spacer */}
+                <div className="hidden md:flex flex-1"></div>
+
+                {/* Desktop Nav - Centered between spacers */}
+                <div className="hidden md:flex items-center space-x-1 lg:space-x-2 z-40">
                     <Link
                         href="/our-story"
                         className={cn(
-                            "text-sm font-medium transition-colors hover:text-accent",
-                            scrolled || variant === "light" ? "text-stone-700" : "text-stone-200",
-                            pathname === "/our-story" && "text-primary font-bold"
+                            "text-xs lg:text-sm transition-all hover:text-accent px-2 lg:px-3 py-1.5 rounded-full flex items-center whitespace-nowrap",
+                            scrolled || variant === "light" ? "text-stone-900 font-medium" : "text-white/90 font-medium drop-shadow-md",
+                            pathname === "/our-story" && cn(
+                                "text-primary font-bold",
+                                !(scrolled || variant === "light") && "bg-white/95 shadow-lg drop-shadow-none"
+                            )
                         )}
                     >
                         About Us
                     </Link>
                     <Link
-                        href="/rooms"
+                        href="/farm-stay-rooms"
                         className={cn(
-                            "text-sm font-medium transition-colors hover:text-accent",
-                            scrolled || variant === "light" ? "text-stone-700" : "text-stone-200",
-                            pathname === "/rooms" && "text-primary font-bold"
+                            "text-xs lg:text-sm transition-all hover:text-accent px-2 lg:px-3 py-1.5 rounded-full flex items-center whitespace-nowrap",
+                            scrolled || variant === "light" ? "text-stone-900 font-medium" : "text-white/90 font-medium drop-shadow-md",
+                            pathname === "/rooms" && cn(
+                                "text-primary font-bold",
+                                !(scrolled || variant === "light") && "bg-white/95 shadow-lg drop-shadow-none"
+                            )
                         )}
                     >
                         The Rooms
@@ -96,9 +115,12 @@ const Navbar = ({ variant = "transparent" }: NavbarProps) => {
                     <Link
                         href="/take-a-tour"
                         className={cn(
-                            "text-sm font-medium transition-colors hover:text-accent",
-                            scrolled || variant === "light" ? "text-stone-700" : "text-stone-200",
-                            pathname === "/take-a-tour" && "text-primary font-bold"
+                            "text-xs lg:text-sm transition-all hover:text-accent px-2 lg:px-3 py-1.5 rounded-full flex items-center whitespace-nowrap",
+                            scrolled || variant === "light" ? "text-stone-900 font-medium" : "text-white/90 font-medium drop-shadow-md",
+                            pathname === "/take-a-tour" && cn(
+                                "text-primary font-bold",
+                                !(scrolled || variant === "light") && "bg-white/95 shadow-lg drop-shadow-none"
+                            )
                         )}
                     >
                         Take a Tour
@@ -106,73 +128,118 @@ const Navbar = ({ variant = "transparent" }: NavbarProps) => {
                     <Link
                         href="/blog"
                         className={cn(
-                            "text-sm font-medium transition-colors hover:text-accent",
-                            scrolled || variant === "light" ? "text-stone-700" : "text-stone-200",
-                            (pathname === "/blog" || pathname?.startsWith("/blog/")) && "text-primary font-bold"
+                            "text-xs lg:text-sm transition-all hover:text-accent px-2 lg:px-3 py-1.5 rounded-full flex items-center whitespace-nowrap",
+                            scrolled || variant === "light" ? "text-stone-900 font-medium" : "text-white/90 font-medium drop-shadow-md",
+                            (pathname === "/blog" || pathname?.startsWith("/blog/")) && cn(
+                                "text-primary font-bold",
+                                !(scrolled || variant === "light") && "bg-white/95 shadow-lg drop-shadow-none"
+                            )
                         )}
                     >
                         Sukrutham Chronicles
                     </Link>
 
-                    {/* Dropdown */}
-                    <div className="relative" ref={dropdownRef}>
+                    {/* Dropdown for Experience */}
+                    <div
+                        className={cn(
+                            "relative flex items-center rounded-full transition-all",
+                            pathname?.startsWith("/experience") && !(scrolled || variant === "light") && "bg-white/95 shadow-lg drop-shadow-none"
+                        )}
+                        ref={dropdownRef}
+                        onMouseEnter={() => setDropdownOpen(true)}
+                        onMouseLeave={() => setDropdownOpen(false)}
+                    >
+                        <Link
+                            href="/experience"
+                            className={cn(
+                                "flex items-center gap-1 text-xs lg:text-sm transition-all hover:text-accent pl-2 lg:pl-3 pr-1 py-1.5 rounded-l-full whitespace-nowrap",
+                                scrolled || variant === "light" ? "text-stone-900 font-medium" : "text-white font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]",
+                                pathname?.startsWith("/experience") && "text-primary font-bold drop-shadow-none"
+                            )}
+                        >
+                            Experience
+                        </Link>
                         <button
                             onClick={() => setDropdownOpen(!dropdownOpen)}
                             className={cn(
-                                "flex items-center gap-1 text-sm font-medium transition-colors hover:text-accent focus:outline-none",
-                                scrolled || variant === "light" ? "text-stone-700" : "text-stone-200"
+                                "flex items-center justify-center pr-2 lg:pr-3 pl-1 py-1.5 rounded-r-full transition-colors focus:outline-none",
+                                scrolled || variant === "light" ? "text-stone-900 hover:text-accent" : "text-white hover:text-accent drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]",
+                                pathname?.startsWith("/experience") && "text-primary font-bold drop-shadow-none"
                             )}
                         >
-                            Experience <ChevronDown className="w-4 h-4" />
+                            <ChevronDown className="w-3 h-3 lg:w-4 lg:h-4 mt-[1px]" />
                         </button>
 
                         {dropdownOpen && (
-                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 bg-white rounded-lg shadow-xl border border-stone-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                                <div className="py-2">
-                                    {experienceLinks.map((link) => (
-                                        <Link
-                                            key={link.name}
-                                            href={link.href}
-                                            className="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-primary transition-colors"
-                                            onClick={() => setDropdownOpen(false)}
-                                        >
-                                            {link.name}
-                                        </Link>
-                                    ))}
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2">
+                                <div className="w-56 bg-white rounded-lg shadow-xl border border-stone-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                                    <div className="py-2">
+                                        {experienceLinks.map((link) => (
+                                            <Link
+                                                key={link.name}
+                                                href={link.href}
+                                                className="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-primary transition-colors"
+                                                onClick={() => setDropdownOpen(false)}
+                                            >
+                                                {link.name}
+                                            </Link>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         )}
                     </div>
 
                     <Link
-                        href="/#testimonials"
+                        href="/our-guests"
                         className={cn(
-                            "text-sm font-medium transition-colors hover:text-accent",
-                            scrolled || variant === "light" ? "text-stone-700" : "text-stone-200"
+                            "text-xs lg:text-sm transition-all hover:text-accent px-2 lg:px-3 py-1.5 rounded-full flex items-center whitespace-nowrap",
+                            scrolled || variant === "light" ? "text-stone-700 font-medium" : "text-white/90 font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]",
+                            pathname === "/our-guests" && cn(
+                                "text-primary font-bold",
+                                !(scrolled || variant === "light") && "bg-white/95 shadow-lg drop-shadow-none"
+                            )
                         )}
                     >
-                        Our Customers
+                        Our Guests
+                    </Link>
+                    <Link
+                        href="/faq"
+                        className={cn(
+                            "text-xs lg:text-sm transition-all hover:text-accent px-2 lg:px-3 py-1.5 rounded-full flex items-center whitespace-nowrap",
+                            scrolled || variant === "light" ? "text-stone-700 font-medium" : "text-white/90 font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]",
+                            pathname === "/faq" && cn(
+                                "text-primary font-bold",
+                                !(scrolled || variant === "light") && "bg-white/95 shadow-lg drop-shadow-none"
+                            )
+                        )}
+                    >
+                        FAQ
                     </Link>
                 </div>
 
-                {/* Right Side Actions */}
-                <div className="hidden md:flex items-center space-x-6 flex-shrink-0 z-50">
+                {/* Right Spacer - Guaranteed equal to Left Spacer */}
+                <div className="hidden md:flex flex-1"></div>
+
+                {/* Right Side Actions - Right side */}
+                <div className="hidden md:flex items-center space-x-3 lg:space-x-6 justify-end flex-shrink-0 z-50">
                     {/* Contact Number */}
                     <a
                         href="tel:+919940668754"
                         className={cn(
-                            "flex items-center gap-2 text-sm font-bold transition-colors hover:text-accent",
-                            scrolled || variant === "light" ? "text-stone-700" : "text-stone-200"
+                            "flex items-center gap-1.5 text-xs lg:text-sm font-bold transition-colors hover:text-accent whitespace-nowrap",
+                            scrolled || variant === "light" ? "text-stone-900" : "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
                         )}
                     >
                         <Phone className="w-4 h-4" />
-                        <span>+91 99406 68754</span>
+                        <span className="hidden lg:inline">+91 99406 68754</span>
+                        <span className="lg:hidden">Call</span>
                     </a>
 
                     <Link
                         href="/book"
                         className={cn(
-                            "px-6 py-3 rounded-full text-sm font-bold tracking-wide transition-all hover:shadow-lg active:scale-95 uppercase",
+                            "px-4 lg:px-6 py-2 md:py-3 rounded-full text-xs lg:text-sm font-bold tracking-wide transition-all hover:shadow-lg active:scale-95 uppercase whitespace-nowrap flex-shrink-0",
                             scrolled || variant === "light"
                                 ? "bg-primary text-white hover:bg-primary/90 shadow-md"
                                 : "bg-white text-primary hover:bg-stone-100 shadow-lg"
@@ -184,7 +251,7 @@ const Navbar = ({ variant = "transparent" }: NavbarProps) => {
 
                 {/* Mobile Menu Button */}
                 <button
-                    className="md:hidden p-2 ml-auto"
+                    className="md:hidden p-2 -mr-2 ml-auto"
                     onClick={() => setIsOpen(!isOpen)}
                     aria-label="Toggle menu"
                 >
@@ -202,15 +269,16 @@ const Navbar = ({ variant = "transparent" }: NavbarProps) => {
                     <Link
                         href="/our-story"
                         className={cn(
-                            "hover:text-primary font-medium text-lg border-b border-stone-100 pb-2",
+                            "hover:text-primary font-medium text-lg border-b border-stone-100 pb-2 flex items-center justify-between",
                             pathname === "/our-story" ? "text-primary font-bold" : "text-stone-600"
                         )}
                         onClick={() => setIsOpen(false)}
                     >
-                        About Us
+                        <span>About Us</span>
+                        <ChevronRight className="w-4 h-4 opacity-50" />
                     </Link>
                     <Link
-                        href="/rooms"
+                        href="/farm-stay-rooms"
                         className={cn(
                             "hover:text-primary font-medium text-lg border-b border-stone-100 pb-2",
                             pathname === "/rooms" ? "text-primary font-bold" : "text-stone-600"
@@ -240,8 +308,18 @@ const Navbar = ({ variant = "transparent" }: NavbarProps) => {
                         Sukrutham Chronicles
                     </Link>
 
-                    <div className="space-y-2">
-                        <div className="text-stone-400 text-sm font-semibold uppercase tracking-wider">Experience</div>
+                    <div className="space-y-2 pt-2">
+                        <Link 
+                            href="/experience"
+                            className={cn(
+                                "text-sm font-semibold uppercase tracking-wider flex items-center justify-between hover:text-primary transition-colors",
+                                pathname === "/experience" ? "text-primary" : "text-stone-400"
+                            )}
+                            onClick={() => setIsOpen(false)}
+                        >
+                            Experience
+                            <ChevronRight className="w-3 h-3 opacity-50" />
+                        </Link>
                         {experienceLinks.map((link) => (
                             <Link
                                 key={link.name}
@@ -255,11 +333,21 @@ const Navbar = ({ variant = "transparent" }: NavbarProps) => {
                     </div>
 
                     <Link
-                        href="/#testimonials"
+                        href="/our-guests"
                         className="text-stone-600 hover:text-primary font-medium text-lg border-b border-stone-100 pb-2"
                         onClick={() => setIsOpen(false)}
                     >
-                        Our Customers
+                        Our Guests
+                    </Link>
+                    <Link
+                        href="/faq"
+                        className={cn(
+                            "hover:text-primary font-medium text-lg border-b border-stone-100 pb-2",
+                            pathname === "/faq" ? "text-primary font-bold" : "text-stone-600"
+                        )}
+                        onClick={() => setIsOpen(false)}
+                    >
+                        FAQ
                     </Link>
 
                     {/* Mobile Contact */}

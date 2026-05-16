@@ -6,66 +6,80 @@ import ScrollAnimation from "@/components/ScrollAnimation";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+const CATEGORY_MAPPING: Record<string, string> = {
+    "4.modern-bathrooms": "Modern Bathrooms",
+    "modern-bathrooms": "Modern Bathrooms",
+    "5.guest-kitchen": "Guest Kitchen",
+    "guest-kitchen": "Guest Kitchen",
+    "6.dining-area": "Dining Area",
+    "dining-area": "Dining Area",
+    "nadumuttam": "Nadumuttam",
+    "traditional-hall": "Living Room",
+    "traditional-halls": "Living Room",
+    "parking-areas": "Parking Areas",
+    "parking": "Parking Areas"
+};
+
 const categories = [
-    "Room Interiors",
     "Modern Bathrooms",
     "Guest Kitchen",
-    "The Sit-out (Verandah)",
-    "Traditional Hall",
+    "Dining Area",
     "Nadumuttam",
-    "Parking"
+    "Living Room",
+    "Parking Areas"
 ];
 
-const galleryImages = [
-    // Room Interiors
-    { src: "/room-gallery/room-1.jpg", category: "Room Interiors", alt: "Elegant Room Interior" },
-    { src: "/room-gallery/room-1a.jpg", category: "Room Interiors", alt: "Cozy Room Details" },
-    { src: "/room-gallery/room-1b.jpg", category: "Room Interiors", alt: "Room Seating Area" },
-    { src: "/room-gallery/room-2.jpg", category: "Room Interiors", alt: "Spacious Bedroom" },
-    { src: "/room-gallery/room-2a.jpg", category: "Room Interiors", alt: "Bedroom Decor" },
-    { src: "/room-gallery/room-2b.jpg", category: "Room Interiors", alt: "Relaxing Room Ambience" },
-    { src: "/room-gallery/room-2c.jpg", category: "Room Interiors", alt: "Room View" },
+const CATEGORY_DESCRIPTIONS: Record<string, string> = {
+    "Modern Bathrooms": "Clean, Refreshing, and Thoughtfully Maintained",
+    "Guest Kitchen": "A Simple Space for Warm, Homemade Moments",
+    "Dining Area": "Where Meals Turn into Shared Memories",
+    "Nadumuttam": "The Heart of the Home, Open to Sky and Light",
+    "Living Room": "Relax, Unwind, and Feel at Home",
+    "Parking Areas": "Secure, spacious, and conveniently located parking for your vehicles."
+};
 
-    // Modern Bathrooms
-    { src: "/room-gallery/bathroom-1.jpg", category: "Modern Bathrooms", alt: "Clean Modern Bathroom" },
-    { src: "/room-gallery/bathroom-2.jpg", category: "Modern Bathrooms", alt: "Premium Bathroom Fixtures" },
+interface GalleryImage {
+    src: string;
+    category: string;
+    heading: string;
+    alt: string;
+}
 
-    // Guest Kitchen
-    { src: "/room-gallery/kitchen.jpg", category: "Guest Kitchen", alt: "Fully Equipped Guest Kitchen" },
-    { src: "/room-gallery/kitchen-b.jpg", category: "Guest Kitchen", alt: "Kitchen Space" },
-    { src: "/room-gallery/dining-area.jpg", category: "Guest Kitchen", alt: "Communal Dining Area" },
-
-    // The Sit-out (Verandah)
-    { src: "/room-gallery/sitout-1.jpg", category: "The Sit-out (Verandah)", alt: "Peaceful Verandah" },
-    { src: "/room-gallery/sitout-2.jpg", category: "The Sit-out (Verandah)", alt: "Verandah Seating" },
-    { src: "/room-gallery/room-sitout-b.jpg", category: "The Sit-out (Verandah)", alt: "Private Room Sit-out" },
-
-    // Traditional Hall
-    { src: "/room-gallery/drawing-room.jpg", category: "Traditional Hall", alt: "Traditional Drawing Room" },
-    { src: "/room-gallery/drawing-room-b.jpg", category: "Traditional Hall", alt: "Heritage Drawing Room Details" },
-
-    // Nadumuttam
-    { src: "/room-gallery/nadumuttam-1b.jpg", category: "Nadumuttam", alt: "Classic Nadumuttam Architecture" },
-
-    // Parking
-    { src: "/room-gallery/car-park.jpg", category: "Parking", alt: "Secure Car Parking" },
-    { src: "/room-gallery/car-park (1).jpg", category: "Parking", alt: "Ample Parking Space" },
+const fallbackImages: GalleryImage[] = [
+    { src: "/room-gallery/modern-bathrooms/bathroom-1.jpg", category: "Modern Bathrooms", heading: "Modern Bathrooms", alt: "Modern Bathrooms" },
+    { src: "/room-gallery/guest-kitchen/kitchen.jpg", category: "Guest Kitchen", heading: "Guest Kitchen", alt: "Guest Kitchen" },
 ];
 
-export default function RoomGallery() {
-    const [activeCategory, setActiveCategory] = useState("Room Interiors");
-    const [activeImageId, setActiveImageId] = useState(galleryImages[0].src);
+export default function RoomGallery({ initialImages }: { initialImages?: Record<string, string[]> }) {
+    const [activeCategory, setActiveCategory] = useState("Modern Bathrooms");
+    
+    // Process initialImages into the flat galleryImages format
+    const galleryImages: GalleryImage[] = initialImages ? Object.entries(initialImages).flatMap(([folder, images]) => {
+        const category = CATEGORY_MAPPING[folder.toLowerCase()] || folder;
+        if (!categories.includes(category)) return []; // Filter out rooms (paddy, etc.)
+        
+        return images.map(src => {
+            return {
+                src,
+                category,
+                // Per user request: Use tab name as heading for the images, not filename
+                heading: category,
+                alt: category
+            };
+        });
+    }) : fallbackImages;
+
+    const [activeImageId, setActiveImageId] = useState(galleryImages[0]?.src || "");
     const filmstripRef = useRef<HTMLDivElement>(null);
 
     const filteredImages = galleryImages.filter(img => img.category === activeCategory);
 
-    // Update active image dynamically when category changes, smoothly resetting to the first of the new category
+    // Update active image dynamically when category changes
     useEffect(() => {
         if (filteredImages.length > 0) {
             setActiveImageId(filteredImages[0].src);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeCategory]);
+    }, [activeCategory, filteredImages.length]);
 
     // Auto-scroll the filmstrip so the active thumbnail is always strictly in view
     useEffect(() => {
@@ -73,27 +87,32 @@ export default function RoomGallery() {
 
         const activeThumb = filmstripRef.current.querySelector('[data-active="true"]') as HTMLElement;
         if (activeThumb) {
-            // Use native scrollIntoView for perfectly smooth, native alignment
-            // block: 'nearest' ensures the main window doesn't jump, only the scrollable container
-            activeThumb.scrollIntoView({
-                behavior: 'smooth',
-                block: 'nearest',
-                inline: 'center'
-            });
+            const container = filmstripRef.current;
+
+            // Calculate center position for both horizontal and vertical scrolling
+            const scrollLeft = activeThumb.offsetLeft - (container.clientWidth / 2) + (activeThumb.clientWidth / 2);
+            const scrollTop = activeThumb.offsetTop - (container.clientHeight / 2) + (activeThumb.clientHeight / 2);
+
+            // Check if it's horizontal layout (mobile) or vertical (desktop)
+            if (window.innerWidth < 1024) {
+                container.scrollTo({ left: scrollLeft, behavior: "smooth" });
+            } else {
+                container.scrollTo({ top: scrollTop, behavior: "smooth" });
+            }
         }
-    }, [activeImageId, filteredImages]);
+    }, [activeImageId]);
 
     const activeImage = galleryImages.find(img => img.src === activeImageId) || galleryImages[0];
     const currentIndex = filteredImages.findIndex(img => img.src === activeImageId);
 
     const handlePrev = () => {
         if (currentIndex > 0) setActiveImageId(filteredImages[currentIndex - 1].src);
-        else setActiveImageId(filteredImages[filteredImages.length - 1].src);
+        else if (filteredImages.length > 0) setActiveImageId(filteredImages[filteredImages.length - 1].src);
     };
 
     const handleNext = () => {
         if (currentIndex < filteredImages.length - 1) setActiveImageId(filteredImages[currentIndex + 1].src);
-        else setActiveImageId(filteredImages[0].src);
+        else if (filteredImages.length > 0) setActiveImageId(filteredImages[0].src);
     };
 
     return (
@@ -104,11 +123,11 @@ export default function RoomGallery() {
                 <ScrollAnimation className="text-center max-w-3xl mx-auto mb-12 relative">
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[#FAF8F5] rounded-full blur-[100px] -z-10 opacity-80"></div>
                     <span className="text-[#A48869] font-bold uppercase tracking-widest text-xs block mb-3">
-                        A VISUAL TOUR
+                        MORE SPACES
                     </span>
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-medium text-stone-900 mb-6 tracking-tight">
-                        Every Corner <br className="md:hidden" />
-                        <span className="text-stone-500 italic font-serif">Tells a Story</span>
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl lg:text-6xl font-display font-medium text-stone-900 mb-6 tracking-tight">
+                        Comfort Extends <br className="md:hidden" />
+                        <span className="text-stone-500 italic font-serif">Beyond Your Room</span>
                     </h2>
                     <p className="text-stone-600 text-lg leading-relaxed max-w-2xl mx-auto">
                         A deeply immersive look at our crafted spaces and natural luxury.
@@ -123,7 +142,7 @@ export default function RoomGallery() {
                                 key={cat}
                                 onClick={() => setActiveCategory(cat)}
                                 className={cn(
-                                    "px-4 md:px-6 py-2 md:py-2.5 rounded-2xl text-[13px] md:text-sm font-medium transition-all duration-500 ease-out",
+                                    "px-4 md:px-6 py-2 md:py-2.5 rounded-2xl text-[13px] md:text-sm font-medium transition-all duration-500 ease-out cursor-pointer",
                                     activeCategory === cat
                                         ? "bg-white text-stone-900 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.1)] scale-100 border border-stone-100"
                                         : "bg-transparent text-stone-500 hover:text-stone-900 hover:bg-white/50 scale-[0.98] hover:scale-100 border border-transparent"
@@ -142,13 +161,13 @@ export default function RoomGallery() {
                         <div className="relative w-full flex-1 aspect-[4/3] sm:aspect-video lg:aspect-auto rounded-[2rem] overflow-hidden shadow-2xl bg-stone-100 group selection-none">
 
                             {/* Rendering all images absolute for buttery-smooth crossfades without remounts */}
-                            {filteredImages.map((img) => (
+                            {filteredImages.map((img, idx) => (
                                 <Image
                                     key={img.src}
                                     src={img.src}
                                     alt={img.alt}
                                     fill
-                                    priority={activeImage.src === img.src}
+                                    priority={idx === 0 || activeImage?.src === img.src}
                                     className={cn(
                                         "object-cover transition-all duration-[1.5s] ease-[cubic-bezier(0.16,1,0.3,1)]",
                                         activeImage?.src === img.src
@@ -163,25 +182,29 @@ export default function RoomGallery() {
                             <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90 z-20 pointer-events-none transition-opacity duration-700" />
                             <div className="absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-black/20 to-transparent opacity-50 z-20 pointer-events-none" />
 
-                            {/* Navigation Controls (Permanently Visible) */}
-                            <div className="absolute inset-y-0 left-0 w-24 flex items-center justify-start px-2 md:px-4 z-30 transition-opacity duration-300">
-                                <button
-                                    onClick={handlePrev}
-                                    className="w-10 h-10 md:w-12 md:h-12 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center text-white shadow-lg transition-transform hover:scale-110 active:scale-95 border border-white/30"
-                                >
-                                    <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
-                                </button>
-                            </div>
-                            <div className="absolute inset-y-0 right-0 w-24 flex items-center justify-end px-2 md:px-4 z-30 transition-opacity duration-300">
-                                <button
-                                    onClick={handleNext}
-                                    className="w-10 h-10 md:w-12 md:h-12 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center text-white shadow-lg transition-transform hover:scale-110 active:scale-95 border border-white/30"
-                                >
-                                    <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
-                                </button>
-                            </div>
+                            {/* Navigation Controls (Conditionally Visible) */}
+                            {filteredImages.length > 1 && (
+                                <>
+                                    <div className="absolute inset-y-0 left-0 w-24 flex items-center justify-start px-2 md:px-4 z-30 transition-opacity duration-300">
+                                        <button
+                                            onClick={handlePrev}
+                                            className="w-10 h-10 md:w-12 md:h-12 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center text-white shadow-lg transition-transform hover:scale-110 active:scale-95 border border-white/30 cursor-pointer"
+                                        >
+                                            <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
+                                        </button>
+                                    </div>
+                                    <div className="absolute inset-y-0 right-0 w-24 flex items-center justify-end px-2 md:px-4 z-30 transition-opacity duration-300">
+                                        <button
+                                            onClick={handleNext}
+                                            className="w-10 h-10 md:w-12 md:h-12 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center text-white shadow-lg transition-transform hover:scale-110 active:scale-95 border border-white/30 cursor-pointer"
+                                        >
+                                            <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
+                                        </button>
+                                    </div>
+                                </>
+                            )}
 
-                            {/* Text Metadata Panel - Removed custom animate to rely purely on standard tailwind transition */}
+                            {/* Text Metadata Panel */}
                             <div className="absolute bottom-6 md:bottom-12 left-6 md:left-12 z-40 max-w-2xl transform transition-all duration-1000 ease-out translate-y-0 opacity-100">
                                 <div className="inline-flex items-center gap-2 mb-3 px-3 py-1 bg-black/40 backdrop-blur-sm rounded-full border border-white/10">
                                     <div className="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
@@ -190,29 +213,31 @@ export default function RoomGallery() {
                                     </span>
                                 </div>
                                 <h3 className="text-white text-3xl md:text-4xl lg:text-5xl font-display font-medium leading-tight drop-shadow-xl tracking-tight mb-2">
-                                    {activeImage?.alt}
+                                    {activeImage?.heading}
                                 </h3>
                                 <p className="text-white/90 text-sm md:text-base max-w-xl font-light leading-relaxed drop-shadow-md hidden sm:block">
-                                    Experience the subtle elegance and careful design of our {activeImage?.category.toLowerCase()}. Every space is crafted to harmonize heritage aesthetics with serene comfort.
+                                    {CATEGORY_DESCRIPTIONS[activeImage?.category] || "Experience the subtle elegance and careful design of our crafted spaces."}
                                 </p>
                             </div>
 
                             {/* Slide Counter Float */}
-                            <div className="absolute top-6 right-6 md:top-8 md:right-8 z-30 bg-black/40 backdrop-blur-md px-5 py-2 rounded-full text-white text-sm font-semibold border border-white/20 tracking-wider shadow-lg">
-                                {currentIndex + 1} <span className="text-white/50 font-normal">/ {filteredImages.length}</span>
-                            </div>
+                            {filteredImages.length > 1 && (
+                                <div className="absolute top-6 right-6 md:top-8 md:right-8 z-30 bg-black/40 backdrop-blur-md px-5 py-2 rounded-full text-white text-sm font-semibold border border-white/20 tracking-wider shadow-lg">
+                                    {currentIndex + 1} <span className="text-white/50 font-normal">/ {filteredImages.length}</span>
+                                </div>
+                            )}
                         </div>
 
-                        {/* Scrollable Filmstrip Ribbon (Vertical on Desktop, Horizontal on Mobile) */}
+                        {/* Scrollable Filmstrip Ribbon */}
                         <style dangerouslySetInnerHTML={{
                             __html: `
-                            .hide-scroll::-webkit-scrollbar { display: none; }
-                            .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+                            .no-scrollbar::-webkit-scrollbar { display: none; }
+                            .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
                         `}} />
 
                         <div
                             ref={filmstripRef}
-                            className="flex lg:flex-col overflow-x-auto lg:overflow-y-auto overflow-x-hidden gap-3 md:gap-4 pb-4 lg:pb-0 lg:py-2 hide-scroll snap-x lg:snap-y snap-mandatory px-2 lg:w-[140px] xl:w-[160px] flex-shrink-0 items-center lg:items-end relative"
+                            className="flex lg:flex-col overflow-x-auto lg:overflow-y-auto overflow-x-hidden gap-3 md:gap-4 pb-4 lg:pb-0 lg:py-2 no-scrollbar snap-x lg:snap-y snap-mandatory px-2 lg:w-[140px] xl:w-[160px] flex-shrink-0 items-center lg:items-end relative"
                         >
                             {filteredImages.map((img) => {
                                 const isActive = activeImage?.src === img.src;
