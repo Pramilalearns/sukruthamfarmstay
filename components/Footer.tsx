@@ -24,7 +24,7 @@ export default function Footer() {
         
         setIsSubmitting(true);
         try {
-            const response = await fetch("/contact.php", {
+            const response = await fetch("https://formsubmit.co/ajax/sukruthamfarmstay@gmail.com", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

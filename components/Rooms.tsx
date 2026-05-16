@@ -31,10 +31,10 @@ export default function Rooms() {
                 <div className="text-center max-w-4xl mx-auto mb-10">
                     <span className="text-primary font-semibold tracking-wider uppercase text-sm">Stay</span>
                     <h2 className="text-3xl md:text-4xl font-display font-bold text-stone-900 mb-4 mt-2 leading-tight">
-                        Best Farm Stay In Kerala
+                        Best Home Stay In Kerala
                     </h2>
                     <p className="text-lg text-stone-600 leading-relaxed max-w-3xl mx-auto">
-                        Sukrutham Farmstay is the best farm stay in Kerala offering an authentic village experience with modern comforts.
+                        Sukrutham Farmstay is the best home stay in Kerala offering an authentic village experience with modern comforts.
                     </p>
                 </div>
 
